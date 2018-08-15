@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/lightgallery.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/lightgallery-all.min.js"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.mousewheel.min.js"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<div class="wrapper show">
+			<div class="myvideo">
+				<video autoplay="autoplay" controls="controls"></video>
+			</div>
+			<!--顶部搜索框-->
+			<header class="head">
+				<span class="mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					学校风采
+				</div>
+				<span>
+					
+				</span>
+			</header>
+			<div class="main">
+				<div class="show-nav" id="fenlei">
+					<div class="tab-nav" v-bind:data-id="site.id" @click="change(index,site.id)" v-for="(site,index) in sites">
+						{{site.name}}
+					</div>
+				</div>
+				<div class="main-inner" id="list">
+					<div class="show-group" v-bind:data-id="site.id" v-for="site in sites">
+						<div class="show-data">
+							{{site.create_time}}
+						</div>
+						<div class="show-main list-unstyled" id="html5-videos">
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script src="js/lightgallery.min.js"></script>
+		<script src="js/lg-pager.min.js"></script>
+		<script src="js/lg-video.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var myvue=	new Vue({
+									el: '#list',
+									data:{
+										sites:''
+									},
+					               updated:function(){
+					               	  var list=$('.show-group'); 
+									    for(i=0;i<list.length;i++){
+									      getPhoto($(list[i]));
+									    }
+					               	  lightGallery(document.getElementById('html5-videos'));
+					               }
+			                   });                
+//			$(function() {
+//				$('.tab-nav').click(function() {
+//					$('.tab-nav').removeClass('active')
+//					$(this).addClass('active')
+//				})
+//			})
+            getData();
+            /*获取数据*/
+            function getData(){
+            	/*获取分类*/
+            	$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"PhotoAlbum.getSchoolClassification",
+							},
+							async:false,				
+							success: function(data){
+								console.log(JSON.stringify(data));
+								new Vue({
+								  el: '#fenlei',
+								  data:{
+								  	sites:data.data
+								  },
+								  mounted: function() {
+						               $('#fenlei .tab-nav').eq(0).addClass('active');
+						                var id= $('#fenlei .tab-nav').eq(0).attr('data-id');
+						                getList(id); 
+					              },
+					              methods:{
+						              	change:function(index,id){
+						              		$('#fenlei .tab-nav').removeClass('active');
+            	                            $('#fenlei .tab-nav').eq(index).addClass('active');
+            	                            $('.show-main').html("");
+            	                            getList(id);
+						               }
+						          }
+								});	
+		                    },
+				            error: function(error) {
+				            	console.log(JSON.stringify(data));
+				                console.log(error);
+				            }
+				    });
+            }
+            /*获取相册列表*/
+            function getList(typeId){
+            	$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":  "PhotoAlbum.getPhotoAlbumBySchool",
+								"schoolId": localStorage.getItem("SchoolId"),
+								"typeId":   typeId
+							},
+							async:false,				
+							success: function(data){
+								console.log(JSON.stringify(data));
+							    myvue.sites=data.data;
+		                    },
+				            error: function(error) {
+				            	console.log(JSON.stringify(data));
+				                console.log(error);
+				            }
+				    });  
+            }
+            /*获取相册图片*/
+           function getPhoto(obj){
+           	    var AlbumId=$(obj).attr('data-id');
+           	    $.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":  "PhotoAlbum.getFile",
+								"id": AlbumId,
+							},
+							async:true,				
+							success: function(data){
+								console.log(JSON.stringify(data));
+								var arr=data.data;
+								for(i=0;i<arr.length;i++){
+									var types=arr[i].type.split('/');
+									if(types[0]!='video'){
+									var list='<div data-src='+'"'+arr[i].url+'">'+
+												'<a href="#">'+
+													'<img src='+'"'+arr[i].url+'"'  +'class="img-responsive"/>'+
+												'</a>'
+											'</div>';
+									$(obj).find('.show-main').append(list);	
+									lightGallery(document.getElementById('html5-videos'));
+									}
+									else{
+										
+									}
+								}
+								
+		                    },
+				            error: function(error) {
+				            	console.log(JSON.stringify(data));
+				                console.log(error);
+				            }
+				    });
+				    return true;
+           }
+		</script>
+	</body>
+
+</html>

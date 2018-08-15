@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<title></title>
+	</head>
+	<style type="text/css">
+		.main {
+			margin-top: .9rem;
+		}
+	</style>
+
+	<body>
+		<div class="wrapper pay">
+			<header class="head">
+				<span class="header-back" onclick="opennew('userinform')">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					修改昵称
+				</div>
+				<span onclick="save()">
+					提交
+				</span>
+			</header>
+			<div class="main">
+				<div class="user-group user-group02">
+					<input type="text" id="nickname"  placeholder="请输入您的用户名"/>
+					<span class="clear">
+						<img src="img/close_03.png"/>
+					</span>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+		function opennew(target) {
+			        var wobj = plus.webview.getWebviewById(target);
+                    wobj.reload(true);
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+				}
+		   function save(){
+		   	  $.ajax({
+							type:"post",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":  "Users.updateNickName",
+								"signature":localStorage.getItem('token'),
+								"nickName" : $('#nickname').val()
+							},
+							async:false,				
+							success: function(data){
+								mui.toast(data.data.info);
+		                    },
+				            error: function(error) {
+				            	console.log(JSON.stringify(data));
+				                console.log(error);
+				            }
+				    });  
+		   }
+			$(function() {
+				$('.clear').click(function(){
+					$('input').val('')
+				})
+				getData();
+				function getData(){
+					$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":  "Users.getInfor",
+								"signature":localStorage.getItem('token')
+							},
+							async:false,				
+							success: function(data){
+								$('#nickname').val(data.data.nick_name);
+								mui.toast(data.data.info);
+		                    },
+				            error: function(error) {
+				            	console.log(JSON.stringify(data));
+				                console.log(error);
+				            }
+				    });  
+				}
+			})
+		</script>
+	</body>
+
+</html>

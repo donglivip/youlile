@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<link rel="stylesheet" href="css/swiper.min.css">
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/swiper.min.js"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<div class="wrapper orderhistory">
+			<!--提示框-->
+			<div class="myalert">
+				<div class="alert-main">
+					<div class="text">
+						您确定取消此订单？
+					</div>
+					<div class="setting">
+						<div id="no">
+							取消
+						</div>
+						<div id="yes">
+							确定
+						</div>
+					</div>
+				</div>
+			</div>
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					我的订单
+				</div>
+				<span>
+					<img src="img/shop01.png" class="news"/>
+				</span>
+			</header>
+			<div class="main">
+				<div class="top-nav">
+					<div class="nav-tab active">
+						全部
+					</div>
+					<div class="nav-tab">
+						待付款
+					</div>
+					<div class="nav-tab">
+						待收货
+					</div>
+					<div class="nav-tab">
+						已完成
+					</div>
+					<div class="nav-tab">
+						已取消
+					</div>
+				</div>
+				<div class="swiper-container">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide" id="alllist">
+							<div class="order-group" v-for="site in sites">
+								<template>
+								<div class="shop-name">
+									<span class="name-left">
+										<img  src="img/cart_03.png"/>
+										<span>
+											优利乐
+										</span>
+										<img src="img/user_31.gif"/>
+									</span>
+									<div class="name-right">
+										<span style="margin-right: 0.1rem;">{{site.logistics_number}}</span>
+										{{site.order_state_text}}
+									</div>
+								</div>
+								<div class="order-main">
+									<img v-bind:src="site.c_cover"/>
+									<h1>
+										{{site.goods_name}}
+									</h1>
+								</div>
+								<div class="order-money" v-if="site.goods_type !=2">
+									共{{site.goods_count}}件商品   合计:¥{{site.order_amount}}
+								</div>
+								<div class="order-money" v-if="site.goods_type ==2">
+									共{{site.goods_count}}件商品   合计:积分:{{site.goods_amount}}
+									<br />
+								    现金: {{site.order_amount}}
+								</div>
+								<div class="order-setting" v-if="site.order_state==0">
+									<span class="cancel" @click="canelOrder(site.order_id)">
+										取消订单
+									</span>
+									<span class="pay" v-if="site.goods_type !=2" @click="movepay(site.order_amount,site.order_sn,site.goods_type)">
+										去支付
+									</span>
+									<span class="pay" v-if="site.goods_type ==2" @click="movepay(site.goods_amount,site.order_sn,site.goods_type)">
+										去支付
+									</span>
+								</div>
+								<div class="order-setting" v-if="site.order_state==1">
+									<span class="cancel" @click="returnGoods(site.order_id)">
+										退货
+									</span>
+									<span class="pay" @click="isOver(site.order_id)">
+										已收货
+									</span>
+								</div>
+								</template>
+							</div>
+						</div>
+						<div class="swiper-slide" id="notPay">
+							<div class="order-group" v-for="site in sites">
+								<template>
+								<div class="shop-name">
+									<span class="name-left">
+										<img  src="img/cart_03.png"/>
+										<span>
+											优利乐
+										</span>
+										<img src="img/user_31.gif"/>
+									</span>
+									<div class="name-right">
+										{{site.order_state_text}}
+									</div>
+								</div>
+								<div class="order-main">
+									<img v-bind:src="site.c_cover"/>
+									<h1>
+										{{site.goods_name}}
+									</h1>
+								</div>
+								<div class="order-money">
+									共{{site.goods_count}}件商品   合计:¥{{site.order_amount}}
+								</div>
+								<div class="order-setting">
+									<span class="cancel" @click="canelOrder(site.order_id)">
+										取消订单
+									</span>
+									<span class="pay" v-if="site.goods_type !=2" @click="movepay(site.order_amount,site.order_sn,site.goods_type)">
+										去支付
+									</span>
+									<span class="pay" v-if="site.goods_type ==2" @click="movepay(site.goods_amount,site.order_sn,site.goods_type)">
+										去支付
+									</span>
+								</div>
+								</template>
+							</div>
+						</div>
+						<div class="swiper-slide" id="notGet">
+							<div class="order-group" v-for="site in sites">
+								<template>
+								<div class="shop-name">
+									<span class="name-left">
+										<img  src="img/cart_03.png"/>
+										<span>
+											优利乐
+										</span>
+										<img src="img/user_31.gif"/>
+									</span>
+									<div class="name-right">
+										<span style="margin-right: 0.1rem;">{{site.logistics_number}}</span>
+										{{site.order_state_text}}
+									</div>
+								</div>
+								<div class="order-main">
+									<img v-bind:src="site.c_cover"/>
+									<h1>
+										{{site.goods_name}}
+									</h1>
+								</div>
+								<div class="order-money">
+									共{{site.goods_count}}件商品   合计:¥{{site.order_amount}}
+								</div>
+								<div class="order-setting">
+									<span class="cancel" @click="returnGoods(site.order_id)">
+										退货
+									</span>
+									<span class="pay" @click="isOver(site.order_id)">
+										已收货
+									</span>
+								</div>
+								</template>
+							</div>
+						</div>
+						<div class="swiper-slide" id="isOver">
+							<div class="order-group" v-for="site in sites">
+								<template>
+								<div class="shop-name">
+									<span class="name-left">
+										<img  src="img/cart_03.png"/>
+										<span>
+											优利乐
+										</span>
+										<img src="img/user_31.gif"/>
+									</span>
+									<div class="name-right">
+										{{site.order_state_text}}
+									</div>
+								</div>
+								<div class="order-main">
+									<img v-bind:src="site.c_cover"/>
+									<h1>
+										{{site.goods_name}}
+									</h1>
+								</div>
+								<div class="order-money">
+									共{{site.goods_count}}件商品   合计:¥{{site.order_amount}}
+								</div>
+								<!--<div class="order-setting">
+									<span class="cancel" @click="canelOrder(site.order_id)">
+										取消订单
+									</span>
+									<span class="pay">
+										去支付
+									</span>
+								</div>-->
+								</template>
+							</div>
+						</div>
+						<div class="swiper-slide" id="isCanel">
+							<div class="order-group" v-for="site in sites">
+								<template>
+								<div class="shop-name">
+									<span class="name-left">
+										<img  src="img/cart_03.png"/>
+										<span>
+											优利乐
+										</span>
+										<img src="img/user_31.gif"/>
+									</span>
+									<div class="name-right">
+										{{site.order_state_text}}
+									</div>
+								</div>
+								<div class="order-main">
+									<img v-bind:src="site.c_cover"/>
+									<h1>
+										{{site.goods_name}}
+									</h1>
+								</div>
+								<div class="order-money">
+									共{{site.goods_count}}件商品   合计:¥{{site.order_amount}}
+								</div>
+								<!--<div class="order-setting">
+									<span class="cancel">
+										取消订单
+									</span>
+									<span class="pay">
+										去支付
+									</span>
+								</div>-->
+								</template>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+		     
+		    /*取消订单*/
+			function canelOrder(id){
+				$.ajax({
+								type:"post",
+								url:window.Config.ApiServer+"/shops/",
+								data:{
+									"service":"GoodsOrder.canelOrder",
+									"signature":localStorage.getItem('token'),
+									"id": id
+								},
+								async:true,				
+								success: function(data){
+									console.log(JSON.stringify(data));
+									if(data.ret==1066)
+									{
+										mui.toast(data.msg);
+									    return false;
+									}
+									mui.toast(data.data.info);
+									location.reload();
+			                    },
+					            error: function(error) {
+					                console.log(JSON.stringify(error));
+					            }
+					    });
+			}
+			/*已收货*/
+			function isOver(id){
+				$.ajax({
+								type:"post",
+								url:window.Config.ApiServer+"/shops/",
+								data:{
+									"service":"GoodsOrder.isOver",
+									"signature":localStorage.getItem('token'),
+									"id": id
+								},
+								async:true,				
+								success: function(data){
+									console.log(JSON.stringify(data));
+									if(data.ret==1066)
+									{
+										mui.toast(data.msg);
+									    return false;
+									}
+									mui.toast(data.data.info);
+									location.reload();
+			                    },
+					            error: function(error) {
+					                console.log(JSON.stringify(error));
+					            }
+					    });
+			}
+			/*申请退货*/
+			function returnGoods(id){
+				$.ajax({
+								type:"post",
+								url:window.Config.ApiServer+"/shops/",
+								data:{
+									"service":"GoodsOrder.returnGoods",
+									"signature":localStorage.getItem('token'),
+									"id": id
+								},
+								async:true,				
+								success: function(data){
+									console.log(JSON.stringify(data));
+									if(data.ret==1066)
+									{
+										mui.toast(data.msg);
+									    return false;
+									}
+									mui.toast(data.data.info);
+									location.reload();
+			                    },
+					            error: function(error) {
+					                console.log(JSON.stringify(error));
+					            }
+					    });
+			}
+			/*去支付*/
+			function movepay(money,orderNumber,goodstype){
+				localStorage.shifujin=money;
+				localStorage.orderNumber=orderNumber;
+				if(goodstype!=2){
+				/*localStorage.getItem('goodtype')==2*/
+				    opennew2('pay');
+				}
+				else{
+					opennew2('jifenpay');
+				}
+			}
+			function opennew2(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+			}
+			$(function() {
+				var mySwiper;
+				mySwiper = new Swiper('.swiper-container', {
+					nested: true,
+					on: {
+						slideChangeTransitionEnd: function() {
+							$('.top-nav .nav-tab').removeClass('active')
+							$('.top-nav .nav-tab').eq(this.activeIndex).addClass('active')
+						}
+					},
+				})
+				$('.top-nav .nav-tab').click(function(){
+					$('.top-nav .nav-tab').removeClass('active')
+					$(this).addClass('active')
+					mySwiper.slideTo($('.nav-tab').index(this), 1000, false); 
+				})
+				$('.name-left').click(function(){
+					opennew('goodsdetail')
+				})
+				$('.order-main').click(function(){
+					opennew('goodsdetail')
+				})
+				$('.noorder').click(function(){
+					$('.myalert').css('display','flex')
+				})
+				$('#no').click(function(){
+					$('.myalert').hide()
+				})
+//				取消订单
+				$('#yes').click(function(){
+					$('.myalert').hide()
+				})
+				$('.cancel').click(function(){
+					$('.myalert').css('display','flex')
+				})
+				$('.pay').click(function(){
+					opennew('pay')
+				})
+				$('.news').click(function(){
+					opennew('information')
+				})
+				function opennew(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+				}
+				getData();
+				/*获取数据*/
+				function getData(){
+					$.ajax({
+									type:"get",
+									url:window.Config.ApiServer+"/shops/",
+									data:{
+										"service":"GoodsOrder.showOrderListByUser",
+										"signature":localStorage.getItem('token'),
+										"type":"all"
+									},
+									async:true,				
+									success: function(data){
+										console.log(JSON.stringify(data));
+										new Vue({
+										  el: '#alllist',
+										  data: {
+										    sites:data.data
+										  }
+
+										});										
+				                    },
+						            error: function(error) {
+						                console.log(JSON.stringify(error));
+						            }
+						    });
+					$.ajax({
+									type:"get",
+									url:window.Config.ApiServer+"/shops/",
+									data:{
+										"service":"GoodsOrder.showOrderListByUser",
+										"signature":localStorage.getItem('token'),
+										"type":"notPay"
+									},
+									async:true,				
+									success: function(data){
+										console.log(JSON.stringify(data));
+										new Vue({
+										  el: '#notPay',
+										  data: {
+										    sites:data.data
+										  }
+										});										
+				                    },
+						            error: function(error) {
+						                console.log(JSON.stringify(error));
+						            }
+						    });	
+					$.ajax({
+									type:"get",
+									url:window.Config.ApiServer+"/shops/",
+									data:{
+										"service":"GoodsOrder.showOrderListByUser",
+										"signature":localStorage.getItem('token'),
+										"type":"notGet"
+									},
+									async:true,				
+									success: function(data){
+										console.log(JSON.stringify(data));
+										new Vue({
+										  el: '#notGet',
+										  data: {
+										    sites:data.data
+										  }
+										});										
+				                    },
+						            error: function(error) {
+						                console.log(JSON.stringify(error));
+						            }
+						    });
+					$.ajax({
+									type:"get",
+									url:window.Config.ApiServer+"/shops/",
+									data:{
+										"service":"GoodsOrder.showOrderListByUser",
+										"signature":localStorage.getItem('token'),
+										"type":"isOver"
+									},
+									async:true,				
+									success: function(data){
+										console.log(JSON.stringify(data));
+										new Vue({
+										  el: '#isOver',
+										  data: {
+										    sites:data.data
+										  }
+										});										
+				                    },
+						            error: function(error) {
+						                console.log(JSON.stringify(error));
+						            }
+						    });	
+					$.ajax({
+									type:"get",
+									url:window.Config.ApiServer+"/shops/",
+									data:{
+										"service":"GoodsOrder.showOrderListByUser",
+										"signature":localStorage.getItem('token'),
+										"type":"isCanel"
+									},
+									async:true,				
+									success: function(data){
+										console.log(JSON.stringify(data));
+										new Vue({
+										  el: '#isCanel',
+										  data: {
+										    sites:data.data
+										  }
+										});										
+				                    },
+						            error: function(error) {
+						                console.log(JSON.stringify(error));
+						            }
+						  });   
+			}
+			})
+		</script>
+	</body>
+
+</html>

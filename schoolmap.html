@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.4&key=3adc59b361b877d943cda0ce50b9b4da"></script>
+		<script src="http://webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="wrapper map">
+			<!--顶部搜索框-->
+			<header class="head">
+				<span class="mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					地图查看
+				</div>
+				<span>
+					
+				</span>
+			</header>
+			<div class="main" id="container">
+				
+			</div>
+		</div>
+		<script type="text/javascript">
+			window.gps= JSON.parse(localStorage.getItem("gps"));
+			var map = new AMap.Map('container', {
+				zoom: 15,
+				center: window.gps
+			});
+			var info=[]
+			AMap.service('AMap.Geocoder', function() { //回调函数
+			//实例化Geocoder
+			geocoder = new AMap.Geocoder({
+				city: "" //城市，默认：“全国”
+			});
+			//		    根据经纬度查地址
+			var lnglatXY = window.gps; //地图上所标点的坐标
+			geocoder.getAddress(lnglatXY, function(status, result) {
+				if(status === 'complete' && result.info === 'OK') {
+					info.push(result.regeocode.formattedAddress)
+					var infoWindow = new AMap.InfoWindow({
+						content: info.join("<br>") //使用默认信息窗体框样式，显示信息内容
+					});
+					infoWindow.open(map, window.gps);
+				} else {
+					//获取地址失败
+				}
+			});
+		})
+		</script>
+	</body>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<link rel="stylesheet" href="css/swiper.min.css">
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/swiper.min.js"></script>
+	</head>
+	<style type="text/css">
+		#course {
+			display: none;
+		}
+		#infor2 img  
+			{  
+			  outline-width:0px;  
+			  vertical-align:top;
+			  -ms-interpolation-mode: bicubic;
+			  width:100% !important;
+			  height: auto !important;  
+			}
+	</style>
+
+	<body>
+		<div class="wrapper course school">
+			<!--视频全屏播放容器-->
+			<div class="myvideo">
+				<video autoplay="autoplay" controls="controls"></video>
+			</div>
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					<strong class="active" data-type='detail'>
+						详情
+					</strong>
+					<strong data-type='course'>
+						课程
+					</strong>
+				</div>
+				<span>
+					<img src="img/school_03.png" class="collect"/>
+					<!--<img src="img/school_05.png"/>-->
+				</span>
+			</header>
+			<!--详情-->
+			<div class="main" id="detail">
+				<div id="scroll">
+					<!--主体轮播图-->
+					<div class="mui-slider" id="slide01">
+						<div class="mui-slider-group">
+							<div class="mui-slider-item">
+								<a href="#"><img v-bind:src="logo" /></a>
+							</div>
+							<!--<div class="mui-slider-item video">
+								<video poster="img/back.jpg" src="img/UC-download.mp4"></video>
+								<img src="img/play.png" />
+							</div>-->
+						</div>
+					</div>
+					<div class="white" id="infor1">
+						<div class="school-name">
+							<img v-bind:src="logo" />
+							<sapn>
+								{{sch_name}}
+							</sapn>
+						</div>
+						<div class="course-num">
+							<div class="num">
+								<span>
+								{{class_number}}
+							</span>
+								<sapn class='grey'>
+									课程数
+								</sapn>
+							</div>
+							<div class="num">
+								<span>
+								{{student_number}}
+							</span>
+								<sapn class='grey'>
+									学员数
+								</sapn>
+							</div>
+							<div class="num">
+								<span>
+								{{hot}}
+							</span>
+								<sapn class='grey'>
+									机构热度
+								</sapn>
+							</div>
+							<a id="phone" href="tel:"><img src="img/school_12.png" /></a>
+						</div>
+						<div class="faith">
+							<div class="faith-group">
+								<img src="img/school_16.png" />
+								<span>
+								诚信保证
+							</span>
+							</div>
+							<div class="faith-group">
+								<img src="img/school_18.png" />
+								<span>
+								优秀机构
+							</span>
+							</div>
+							<div class="faith-group">
+								<img src="img/school_20.png" />
+								<span>
+								返券
+							</span>
+							</div>
+						</div>
+					</div>
+					<div class="school-group"  style="padding-bottom: .2rem;">
+						<div class="group-title">
+							<div class="group-inner">
+								学校简介
+							</div>
+						</div>
+						<div class="group-text" id="infor2" v-html="introduction">
+							{{introduction}}
+						</div>
+						<img src="img/course_03.png" class="text-arr" />
+					</div>
+					<div class="school-group">
+						<div class="group-title">
+							<div class="group-inner">
+								学校地址
+							</div>
+						</div>
+						<div class="group-main">
+							<div class="group-text" id="infor3">
+								{{address_name}}
+							</div>
+							<div class="group-adress" data-gps="">
+								<img src="img/school_25.png" />
+								<sapn>
+									<!--1248.2KM-->
+								</sapn>
+							</div>
+						</div>
+					</div>
+					<div class="school-group" id="infor4">
+						<div class="group-title">
+							<div class="group-inner">
+								学校风采
+							</div>
+						</div>
+						<div class="group-video" id="videolist">
+							<div class="video-group" v-for="site in sites">
+								<video src="" v-bind:poster="site.url"></video>
+								<!--<img src="" />-->
+							</div>
+						</div>
+						<div class="more show">
+							<span>
+								查看更多
+							</span>
+							<img src="img/user_31.gif" />
+						</div>
+					</div>
+					<div class="school-group" id="infor5">
+						<div class="group-title">
+							<div class="group-inner">
+								学校评论
+							</div>
+						</div>
+						<div class="rating-group" v-for="site in sites">
+							<img v-bind:src="site.head_portrait"  class="avatar" />
+							<div class="rating-main">
+								<div class="rating-name">
+									<span>
+										{{site.nick_name}}
+									</span>
+								</div>
+								<div class="rating-text">
+									{{site.body}}
+								</div>
+								<div class="rating-inform">
+									<span>
+										
+									</span>
+									<span>
+										{{site.review_time}}
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="more schoolrating">
+							<span>
+								查看更多
+							</span>
+							<img src="img/user_31.gif" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--课程-->
+			<div class="main" id="course">
+				<div class="course-nav">
+					<div class="nav-tab">
+						<span class="active">
+							精品
+						</span>
+					</div>
+					<div class="nav-tab">
+						<span>
+							其他
+						</span>
+					</div>
+				</div>
+				<div class="swiper-container" id="slide02">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide" id="jingpin_card" >
+							<template>
+							<div class="course-group" onclick="moveToCourse(this)"  v-bind:data-id="site.card_id" v-for="site in sites">
+								<div class="course-top">
+									<span class="course-name">
+										{{site.title}}
+									</span>
+									<span class="course-year">
+										{{site.type_text}}
+									</span>
+								</div>
+								<div class="course-type">
+									# {{site.class_name}}
+								</div>
+								<div class="course-money">
+									<span class="price">
+										¥{{site.price}}
+									</span>
+									<span class="buy-num">
+                                       {{site.people_buy}}人已购买
+									</span>
+								</div>
+							</div>
+							</template>
+						</div>
+						<div class="swiper-slide" id="qita_card">
+							<template>
+							<div class="course-group" onclick="moveToCourse(this)" v-bind:data-id="site.card_id" v-for="site in sites">
+								<div class="course-top">
+									<span class="course-name">
+										{{site.title}}
+									</span>
+									<span class="course-year">
+										{{site.type_text}}
+									</span>
+								</div>
+								<div class="course-type">
+									<span>
+										# {{site.class_name}}
+									</span>
+								</div>
+								<div class="course-money">
+									<span class="price">
+										¥{{site.price}}
+									</span>
+									<span class="buy-num">
+										{{site.people_buy}}人已购买
+									</span>
+								</div>
+							</div>
+							</template>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="bottom">
+				<form action="" onsubmit="return false">
+					<input id="pinglun" type="text" placeholder="说点什么呗~"/>
+					<input type="submit" name="" id="ping" onclick="pingluns()" value="发布" />
+				</form>
+			</div>
+		</div>
+
+		<script type="text/javascript">
+		   function pinglunMore(){
+		   	    opennew2('')
+		   }
+		    function pingluns(){
+		    	$.ajax({
+							type:"post",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"School.addReview",
+								"signature":localStorage.getItem("token"),
+								"schoolId": localStorage.getItem("SchoolId"),
+								"body":$('#pinglun').val()
+							},
+							async:true,				
+							success: function(data){
+								mui.toast(data.data.info);
+								location.reload();
+		                    },
+				            error: function(error) {
+				            	console.log(JSON.stringify(data));
+				                console.log(error);
+				            }
+				    });
+		    }
+		    function moveToCourse(obj){
+		    	    var id=$(obj).attr('data-id');
+		        	localStorage.CourseId=id;
+		        	opennew2('coursedetail');
+		    }
+		    function opennew2(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+				}
+			$(function() {
+				var index = 0
+				var gallery = mui('#slider01');
+				gallery.slider({
+					interval: 3000 //自动轮播周期，若为0则不自动播放，默认为0；
+				});
+				var mySwiper;
+				function opennew(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+				}
+				function plusReady() {
+				// 弹出系统等待对话框
+					var w = plus.nativeUI.showWaiting("数据加载中...");
+					getData();		
+					
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
+				$('.group-adress').click(function() {
+					localStorage.gps=$(this).attr('data-gps');
+					opennew('schoolmap');
+				})
+				
+				$('.show').click(function() {
+					opennew('show')
+				})
+				$('.newslist').click(function() {
+					opennew('newslist')
+				})
+				$('.video img').click(function() {
+					$(this).prev().click()
+				})
+				$('video').click(function() {
+					$('.myvideo video').attr('src', $(this).attr('src'))
+					$('.myvideo').show()
+				})
+				$('.myvideo').click(function() {
+					$('.myvideo').hide()
+					$('.myvideo video').attr('src', '')
+				})
+				$('.text-arr').click(function() {
+					if($('.group-text').attr('class') == 'group-text') {
+						$('.group-text').attr('class', 'group-text textauto')
+						$(this).attr('src', 'img/arrtop.png')
+					} else {
+						$('.group-text').attr('class', 'group-text')
+						$(this).attr('src', 'img/course_03.png')
+					}
+				})
+				$('.head strong').click(function() {
+					$('.head strong').removeClass('active')
+					$(this).addClass('active')
+					$('.main').hide()
+					$('#' + $(this).attr('data-type') + '').show()
+					mySwiper = new Swiper('.swiper-container', {
+						nested: true,
+						on: {
+							slideChangeTransitionEnd: function() {
+								$('.nav-tab span').removeClass('active')
+								$('.nav-tab span').eq(this.activeIndex).addClass('active')
+							}
+						},
+					})
+				})
+				$('.nav-tab').click(function() {
+					$('.nav-tab span').removeClass('active')
+					$(this).children().addClass('active')
+					mySwiper.slideTo($('.nav-tab').index(this), 1000, false); //切
+				})
+				$('.collect').click(function(){
+					if($(this).attr('src')=='img/school_03.png'){
+						$(this).attr('src','img/school02_03.png')
+					}else{
+						$(this).attr('src','img/school_03.png')
+					}
+				})
+				getData();
+				function getData(){
+					var goodsId= localStorage.getItem("SchoolId");
+					$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"School.details",
+								"schoolId":localStorage.getItem("SchoolId")
+							},
+							async:true,				
+							success: function(data){
+								console.log(data.data.introduction);
+			                    new Vue({
+								  el: '#infor1',
+								  data:data.data
+								});
+							    new Vue({
+								  el: '#slide01',
+							      data:data.data
+								});
+								new Vue({
+								  el: '#infor2',
+								  data:data.data
+								});
+								new Vue({
+								  el: '#infor3',
+								  data:data.data
+								});
+								$('.group-adress').attr("data-gps",data.data.gps);
+								var phone= data.data.phone;
+								$('#phone').attr('href','tel:'+phone);
+								closeWaiting();								
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				            }
+				    });
+				     /*获取课程列表*/
+				    $.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"School.getSchoolCard",
+								"schoolId": localStorage.getItem("SchoolId"),
+								"typeId":JSON.stringify([0,1,2,3])
+							},
+							async:false,				
+							success: function(data){
+								console.log(JSON.stringify(data));
+								new Vue({
+								  el: '#jingpin_card',
+								  data:{
+								  	sites:data.data
+								  }
+								});
+								closeWaiting();								
+		                    },
+				            error: function(error) {
+				            	console.log(JSON.stringify(data));
+				                console.log(error);
+				            }
+				    });
+				     /*其他课程列表*/
+				    $.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"School.getSchoolCard",
+								"schoolId": localStorage.getItem("SchoolId"),
+								"typeId":JSON.stringify([4])
+							},
+							async:false,				
+							success: function(data){
+								console.log(JSON.stringify(data));
+								new Vue({
+								  el: '#qita_card',
+								  data:{
+								  	sites:data.data
+								  }
+								});
+								closeWaiting();								
+		                    },
+				            error: function(error) {
+				            	console.log(JSON.stringify(data));
+				                console.log(error);
+				            }
+				    });
+				    /*显示风采 localStorage.getItem("SchoolId")*/
+				   $.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"PhotoAlbum.getFileBySchool",
+								"schoolId": localStorage.getItem("SchoolId"),
+								"number":2
+							},
+							async:true,				
+							success: function(data){
+								console.log(JSON.stringify(data));
+								new Vue({
+								  el: '#videolist',
+								  data:{
+								  	sites:data.data
+								  },
+								  mounted: function() {
+					                 
+					              }
+								});
+								closeWaiting();								
+		                    },
+				            error: function(error) {
+				            	console.log(JSON.stringify(data));
+				                console.log(error);
+				            }
+				    });
+				    /*获取学校评论*/
+				   $.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"School.commentList",
+								"schoolId": localStorage.getItem("SchoolId"),
+								"number":   3
+							},
+							async:true,				
+							success: function(data){
+								console.log(JSON.stringify(data));
+								new Vue({
+								  el: '#infor5',
+								  data:{
+								  	sites:data.data
+								  },
+								  mounted: function(){
+								  	 $('.schoolrating').click(function() {
+									    opennew('schoolrating')})
+								  }
+								});
+								closeWaiting();								
+		                    },
+				            error: function(error) {
+				            	console.log(JSON.stringify(data));
+				                console.log(error);
+				            }
+				    });
+				}
+				
+				function closeWaiting(){
+				   plus.nativeUI.closeWaiting();
+			   }
+			})
+		</script>
+	</body>
+
+</html>

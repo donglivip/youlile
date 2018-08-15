@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/main.css"/>
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+			#body_show img  
+			{  
+			  outline-width:0px;  
+			  vertical-align:top;
+			  -ms-interpolation-mode: bicubic;
+			  width:100%;  
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div class="wrapper shopdetail">
+			<div class="myvideo">
+				<video autoplay="autoplay" controls="controls"></video>
+			</div>
+			<!--提示框-->
+			<div class="myalert">
+				<div class="alert-main">
+					<div class="text">
+						您还未登录，立即登录？
+					</div>
+					<div class="setting">
+						<div id="no">
+							取消
+						</div>
+						<div id="yes">
+							确定
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--底部弹出购物-->
+			<div class="alertprice">
+				<div class="aprice-main">
+					<div class="alert-inform" id="bottom_show">
+						<img v-bind:src="cover"/>
+						<div class="inform">
+							<div class="shop-price">
+								<span><b id="qianqian">¥</b>{{price}}</span> (原价)
+							</div>
+							<div class="shop-inform">
+								商品名称:{{name}}
+							</div>
+						</div>
+					</div>
+					<div class="shop-num">
+						<span>
+							购买数量
+						</span>
+						<span class="num">
+							<span class="add-box" id="remove">
+								<img src="img/remove.png"/>
+							</span>
+							<input readonly="" type="number" id="byNumber" value="1" />
+							<span class="add-box" id="add">
+								<img src="img/add.png"/>
+							</span>
+						</span>
+					</div>
+					<div class="buy">
+						<div class="buy-add" id="addShopCard">
+							加入购物车
+						</div>
+						<div class="buy-buy" id="buy">
+							立即购买
+						</div>
+					</div>
+				</div>
+			</div>
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					<a href="#shop" class="active">商品</a>
+					<a href="#detail">详情</a>
+				</div>
+				<span id="moveToShopCard">
+					<img src="img/detail_05.png"/>
+				</span>
+			</header>
+			<div class="main">
+				<div id="shop"></div>
+				<!--主体轮播图-->
+				<div class="mui-slider" id="slide_box">
+					
+					<div class="mui-slider-group" id="slide">
+						<template>
+						<div class="mui-slider-item" v-for="site in sites">
+							<a href="#"><img v-bind:src="site.img_url" /></a>
+						</div>
+						<!--<div class="mui-slider-item video">
+								<video poster="img/back.jpg" src="img/UC-download.mp4"></video>
+								<img src="img/play.png"/>
+						</div>-->
+						</template>
+					</div>
+				</div>
+				<div class="main-group" id="show_title">
+					<template>
+					<h1>
+						{{name}}
+					</h1>
+					<div class="price">
+						<span><b id="biaozhi1">¥</b>{{price}}</span> <b id="keyong">可用劵{{card_volume_limit}}</b>
+					</div>
+					<p>
+						<span>快递:¥{{kuaidi}}</span>
+						<span>销量:{{sales}}</span>
+					</p>
+					</template>
+				</div>
+				<div class="main-group special">
+					<span class="red">*</span>选择分类
+				</div>
+				<div id="type_list">
+				
+				</div>
+				<div class="main-group special" id="temai" style="display: none;">
+					<span class="red">*</span>本商品为特卖商品
+				</div>
+				<div class="main-group special" id="putong" style="display: none;">
+					<span class="red">*</span>本商品为普通商品
+				</div>
+				<div class="main-group special" id="jifen" style="display: none;">
+					<span class="red">*</span>本商品为积分商品
+				</div>
+				<div id="detail"></div>
+				<div class="main-group">
+					<div class="detail-tab">
+						<div class="active" style="border-right: 1px solid ghostwhite;">
+							商品介绍
+						</div>
+						<!--<div>
+							规格参数
+						</div>-->
+					</div>
+					<div class="mui-slider">
+					  <div class="mui-slider-group">
+					 
+						    <div class="mui-slider-item" id="body_show" v-html="body">
+						    	<template>
+						    	    {{body}}
+						    	</template>
+						    </div>
+					 
+					    <!--<div class="mui-slider-item">
+					    	<div class="error">
+								该商品暂时没有规格参数
+							</div>
+					    </div>-->
+					  </div>
+					</div>
+				</div>
+			</div>
+			<!--底部导航栏-->
+			<bottom class='bottom'>
+				<div class="bottom-tab bottom-price">
+					<span id="bottom_price"></span>(优惠价)
+				</div>
+				<div id="jiaru" class="bottom-tab addcart alertshow">
+					加入购物车
+				</div>
+				<div class="bottom-tab goshop alertshow">
+					立即抢购
+				</div>
+			</bottom>
+			<input type="hidden" id="goodsId" value="" />
+		</div>
+		<script type="text/javascript">
+			$(function(){
+				getData();
+				var gallery = mui('.mui-slider');
+				$('.detail-tab div').click(function(){
+					if($('.detail-tab div').eq(1).attr('class')!='active'){
+						$('.detail-tab div').removeClass('active')
+						$('.detail-tab div').eq(1).addClass('active')
+						gallery.slider().gotoItem(1);
+					}else{
+						$('.detail-tab div').removeClass('active')
+						$('.detail-tab div').eq(0).addClass('active')
+						gallery.slider().gotoItem(0);
+					}
+				})
+				$('#remove').click(function(){
+					if($('input').val()>1){
+						$('input').val($('input').val()-1)
+					}
+					event.stopPropagation()
+				})
+				$('#add').click(function(){
+					$('input').val(parseInt($('input').val())+1)
+					event.stopPropagation()
+				})
+				$('.alertprice').click(function(){
+					$('.alertprice').css('top','100%')
+				})
+				$('.alertshow').click(function(){
+					$('.alertprice').css('top','0')
+				})
+				$('.video img').click(function(){
+					$(this).prev().click()
+				})
+				$('video').click(function(){
+					$('.myvideo video').attr('src',$(this).attr('src'))
+					$('.myvideo').show()
+				})
+				$('.myvideo').click(function(){
+					$('.myvideo').hide()
+					$('.myvideo video').attr('src','')
+				});
+				$('#addShopCard').click(function(){
+					addShopCar();
+				});
+				$('#buy').click(function(){
+					localStorage.byNumber= $('#byNumber').val();
+					var guigelist=[];
+					var list=$('.guige');
+					for(var i=0;i<list.length;i++){
+						var nowobj={"lei":$(list[i]).attr('data-id'),"lei_name":$(list[i]).attr('data-name'),"shu":$(list[i]).find('.active').html()};
+						guigelist.push(nowobj);
+					}
+					console.log(JSON.stringify(guigelist));
+					localStorage.shuxing=JSON.stringify(guigelist);
+					if(window.goods_type==2){
+						opennew('jifenorder');
+					}
+					else{
+						opennew('order');
+					}
+				});
+				 $(".shopdetail .head a").click(function() {
+				 	$('.shopdetail .head a').removeClass('active')
+					$(this).addClass('active')
+				    $(".main").animate({
+				      scrollTop: $($(this).attr("href")).offset().top+-30+"px"
+				    }, {
+				      duration: 300,
+				      easing: "swing"
+				    });
+				    return false;
+				  });
+//				$('.aprice-main').click(function(){
+//					event.stopPropagation()
+//				})
+                function opennew(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+			    }
+             $('#moveToShopCard').click(function(){
+             	var wobj = plus.webview.getWebviewById("shopcart");
+             	if(wobj !=null){
+                    wobj.reload(true);
+                }
+             	opennew('shopcart');
+             });
+             /*添加购物车*/
+             function addShopCar(){
+             	$.ajax({
+							type:"post",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"ShoppingCart.shoppingCard",
+								"goodsId": localStorage.getItem("GoodsId"),
+								"signature": localStorage.getItem("token"),
+								"byNumber":$('#byNumber').val()
+							},
+							async:true,				
+							success: function(data){
+								if(data.ret==1066)
+								{
+									mui.toast(data.msg);
+									var wobj = plus.webview.getWebviewById('login');
+									if(wobj!=null){
+									   wobj.reload(true);
+									}
+									opennew('login');
+									return false;
+								}
+								else{
+			                    mui.toast(data.data.info);
+			                   }
+		                    },
+				            error: function(error) {
+				                console.log(JSON.stringify(error));
+				            }
+				    });
+             }
+             function plusReady() {
+				// 弹出系统等待对话框
+				var w = plus.nativeUI.showWaiting("数据加载中...");
+				getData();		
+				
+			}
+             function getData(){
+             	/*商品幻灯片*/
+             	$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"Goods.getGoodsSlide",
+								"goodsId": localStorage.getItem("GoodsId")
+							},
+							async:true,				
+							success: function(data){
+								console.log(JSON.stringify(data));
+			                    new Vue({
+								  el: '#slide',
+								  data: {
+								    sites:data.data
+								  },
+								  mounted: function() {
+					                var gallery = mui('#slide_box');
+					                gallery.slider({
+					                    interval: 3000
+					                });
+					               
+						           
+					             }  
+								});
+		                    },
+				            error: function(error) {
+				                console.log(JSON.stringify(error));
+				            }
+				    });
+				function showguige(){
+					$.ajax({
+								type:"get",
+								url:window.Config.ApiServer+"/shops/",
+								data:{
+									"service":"GoodsSpecifications.getByGoodsId",
+									"goods_id": localStorage.getItem("GoodsId")
+								},
+								async:true,				
+								success: function(data){
+									
+									console.log(JSON.stringify(data));
+									var tt=data.data;
+									for(i=0;i<tt.length;i++){
+										var dataid=tt[i].id;
+										var row='<div class="main-group type guige" data-id="'+tt[i].id+'" data-name="'+tt[i].name+'">'+tt[i].name+'：</div>';
+										$('#type_list').append(row);
+										var child=JSON.parse(data.data[i].attribute);
+										for(j=0;j<child.length;j++){
+											var row2='<div class="type-group">'+child[j]+'</div>';
+											$('div[data-id='+dataid+']').append(row2);
+										}
+									}
+									var list=$('.guige');
+									for(cs=0;cs<list.length;cs++){
+										    $(list[cs]).find('.type-group').eq(0).addClass('active');
+										    $(list[cs]).find('.type-group').click(function(){
+											$(this).parent().find('.type-group').removeClass('active')
+											$(this).addClass('active')
+										})
+									}
+			                    },
+					            error: function(error) {
+					                console.log(JSON.stringify(error));
+					            }
+					    });
+				   }
+				/*商品信息*/
+				$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"Goods.getGoodsById",
+								"id": localStorage.getItem("GoodsId")
+							},
+							async:true,				
+							success: function(data){
+			                    new Vue({
+								  el: '#show_title',
+								  data: data.data,
+								  
+								});
+								new Vue({
+								  el: '#body_show',
+								  data: data.data
+								});
+								new Vue({
+								  el: '#bottom_show',
+								  data: data.data
+								});
+								if(data.data.is_sale==0)
+								{
+								  	$('#temai').css("display","none");
+								}
+								$('#bottom_price').html("¥"+data.data.price);
+								var goods_type=data.data.goods_type;
+								window.goods_type=goods_type;
+								if(goods_type==0){
+									$('#putong').css('display','block');
+									$('#biaozhi1').html('¥');
+								}
+								if(goods_type==1){
+									$('#temai').css('display','block');
+									$('#biaozhi1').html('¥');
+								}
+								if(goods_type==2){
+									$('#jifen').css('display','block');
+									$('#jiaru').css('display','none');
+									$('#addShopCard').css('display','none');
+									$('#remove').css('display','none');
+									$('#add').css('display','none');
+					                $('#biaozhi1').html('积分:');
+					                $('#keyong').css('display','none');
+					                $('#bottom_price').html("积分:"+data.data.price);
+					                $('#qianqian').html('积分:');
+								}
+								showguige();
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				            }
+				     });
+				    
+				}
+			})
+		</script>
+	</body>
+</html>

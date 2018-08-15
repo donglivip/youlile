@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<link rel="stylesheet" href="css/swiper.min.css">
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/swiper.min.js"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<div class="wrapper orderhistory collect">
+			<!--提示框-->
+			<div class="myalert">
+				<div class="alert-main">
+					<div class="text">
+						您确定取消此订单？
+					</div>
+					<div class="setting">
+						<div id="no">
+							取消
+						</div>
+						<div id="yes">
+							确定
+						</div>
+					</div>
+				</div>
+			</div>
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					我的收藏
+				</div>
+				<span>
+					<img src="img/shop01.png" class="news"/>
+				</span>
+			</header>
+			<div class="main">
+				<div class="top-nav">
+					<div class="nav-tab active">
+						课程
+					</div>
+				</div>
+				<div class="swiper-container">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide" id="list">
+							<template>
+								<div class="collect-group" @click="moveToCourse(site.key_id)" v-for="site in sites">
+									<img v-bind:src="site.course_logo"/>
+									<h1>
+										{{site.title}}
+									</h1>
+									<p>
+										¥{{site.price}}
+									</p>
+								</div>
+							</template>	
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+		    function moveToCourse(id){
+		        	localStorage.CourseId=id;
+		        	opennew2('coursedetail');
+		    }
+		    function opennew2(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+			}
+			$(function() {
+				var mySwiper;
+				mySwiper = new Swiper('.swiper-container', {
+					nested: true,
+					on: {
+						slideChangeTransitionEnd: function() {
+							$('.top-nav .nav-tab').removeClass('active')
+							$('.top-nav .nav-tab').eq(this.activeIndex).addClass('active')
+						}
+					},
+				})
+				$('.top-nav .nav-tab').click(function(){
+					$('.top-nav .nav-tab').removeClass('active')
+					$(this).addClass('active')
+					mySwiper.slideTo($('.nav-tab').index(this), 1000, false); 
+				})
+				function opennew(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+				}
+				getData();
+				function getData(){
+					$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"CourseFavorites.show",
+								"signature":localStorage.getItem('token')
+							},
+							async:true,				
+							success: function(data){
+							    console.log(JSON.stringify(data));
+			                    new Vue({
+								  el: '#list',
+								  data: {
+								    sites:data.data
+								  }
+								});
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				            }
+				    });
+				}
+			})
+		</script>
+	</body>
+
+</html>

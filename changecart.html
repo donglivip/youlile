@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<style type="text/css">
+		.pay .pay-group img{width: auto;height: .4rem;}
+		.main span{color: rgb(280,80,60);font-size: .25rem;font-weight: bold;}
+	</style>
+	<body>
+		<div class="wrapper pay" id="app">
+			<!--顶部搜索框-->
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					我的优惠券
+				</div>
+				<span></span>
+			</header>
+			<div class="main" id="list">
+				<p>
+					选择优惠券
+				</p>
+				<template>
+					<div class="pay-group" v-for="site in sites">
+						<img src="img/cartchange_03.png"/>
+						<span>
+							- ¥{{site.money}}
+						</span>
+						<div class="pay-circle" v-bind:data-id="site.id" v-bind:data-price="site.money">
+							<img src="img/pay_09.png"/>
+						</div>
+					</div>
+				</template>	
+			</div>
+			<div class="bottom-buy" onclick="getOut()">
+				确定
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+	    getData();
+	    function getOut(){
+	    	var card_id=[];
+	    	var card_money=[];
+	    	$('.pay-circle').each(function(){
+	    		if($(this).hasClass('active')){
+	    			card_id.push($(this).attr('data-id'));
+	    			card_money.push($(this).attr('data-price'));
+	    		}
+	    	});
+	    	localStorage.cardId=JSON.stringify(card_id);
+	    	localStorage.cardMoney=JSON.stringify(card_money);
+	    	var wobj = plus.webview.getWebviewById("order");
+            wobj.reload(true);
+	    	opennew('order');
+	    }
+		function opennew(target) {
+				mui.openWindow({
+					url: '' + target + '.html',
+					id: '' + target + ''
+				})
+		}
+		function getData(){
+				$.ajax({
+					type:"get",
+					url:window.Config.ApiServer+"/shops/",
+					data:{
+						"service":"ReturnCard.getCardIsReturnList",
+						"signature": localStorage.getItem("token")
+					},
+					async:true,				
+					success: function(data){
+						console.log(JSON.stringify(data));
+	                    new Vue({
+						  el: '#list',
+						  data:{
+						  	sites:data.data
+						  },
+						  mounted: function() {
+					          $('.pay-circle').click(function(){
+								if($(this).attr('class')=='pay-circle'){
+									$(this).addClass('active');
+								    if(!panduan()){
+								    	$(this).removeClass('active');
+								    	alert('已到达上限');
+								    }
+								}else{
+									$(this).removeClass('active')
+								}
+							}) 
+					      }
+						});
+	                },
+		            error: function(error) {
+		                console.log(error);
+		            }
+		        });
+		}
+		function panduan(){
+			var xiane= localStorage.getItem('xiane');
+			var list=$('.pay-circle');
+			var card_money=[];
+			for(var i=0;i<list.length;i++){
+				if($(list[i]).hasClass('active')){
+	    		  if(Number($(list[i]).attr('data-price')) >= Number(xiane)){
+	    		  	 for(j=0;j<list.length;j++){
+	    		  	 	if($(list[j]).hasClass('active') && j!=i){
+	    		  	 		$(list[j]).removeClass('active');
+	    		  	 	}
+	    		  	 }
+	    		  	 break;
+	    		  }
+	    		}
+			}
+			for(i=0;i<list.length;i++){
+				if($(list[i]).hasClass('active')){
+	    			card_money.push($(list[i]).attr('data-price'));
+	    		}
+			}
+			sum=0.0;
+			for(i=0;i<card_money.length;i++){
+				sum=((Number(sum)+Number(card_money[i])).toFixed(2));
+			}
+			return true;
+			/*if(Number(sum) > Number(xiane)){
+				return false;
+			}
+			else{
+				
+				return true;
+			}*/
+		}
+		$(function() {
+			function plusReady() {
+				// 弹出系统等待对话框
+				var w = plus.nativeUI.showWaiting("数据加载中...");
+			}
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener("plusready", plusReady, false);
+			}
+			setTimeout(function() {
+				plus.nativeUI.closeWaiting()
+			}, 1000)
+			function opennew(target) {
+				mui.openWindow({
+					url: '' + target + '.html',
+					id: '' + target + ''
+				})
+			}
+			
+		})
+	</script>
+
+</html>

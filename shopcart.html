@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<div class="wrapper index shop shopcart" id="app">
+			<div class="myvideo">
+				<video autoplay="autoplay" controls="controls"></video>
+			</div>
+			<!--顶部搜索框-->
+			<header class="head">
+				<span></span>
+				<div style="padding-left: 50px;font-size: 0.34rem;">
+					购物车
+				</div>
+				<span>
+					<span id="editor">编辑</span> <img src="img/shop01.png" onclick="opennew('information')"/>
+				</span>
+			</header>
+			<div class="main">
+				<div id="main-inner">
+				<div class="cart-group" id="list">
+					<div class="cart-shop">
+						<div class="top" onclick="selectAll(this)">
+							<img src="img/register_07.png"/>
+						</div>
+						<img src="img/cart_03.png"/>
+						优利乐
+						<img src="img/user_31.gif"/>
+					</div>
+					
+					<div class="cart-main" v-for="(site,index) in sites">
+						<template>
+						<div v-bind:data-id="site.cart_id" class="round" @click="update2(index,site.cart_id)">
+							<img src="img/register_07.png"/>
+						</div>
+						<div class="img-box">
+							<img v-bind:src="site.cover"/>
+							<!--<sapn class='cart-title'>
+								特卖商品
+							</sapn>-->
+						</div>
+						<div class="cart-text">
+							<div class="cart-name">
+								{{site.name}}
+							</div>
+							<div class="cart-price">
+								<span class="cart-money">
+									<strong>
+										¥{{site.price}}
+									</strong>
+									(原价)
+								</span>
+								<span class="count">
+									<span class="shop-num">数量  x{{site.by_number}}</span>
+									<div class="mui-numbox" data-numbox-step='1' data-numbox-min='1'>
+									 <!-- <button class="mui-btn mui-numbox-btn-minus" v-bind:data-id="site.cart_id" type="button">-</button>-->
+									  <input class="mui-numbox-input" v-bind:data-id="site.id" onchange="ceshi(this)" type="number"/>
+									  <!--<button class="mui-btn mui-numbox-btn-plus" v-bind:data-id="site.cart_id"  type="button">+</button>-->
+									  <input type="hidden" class="byNumber" v-bind:data-id="site.cart_id" v-bind:value="site.by_number" />
+									  <input type="hidden" class="byPrice" v-bind:data-id="site.cart_id" v-bind:value="site.price" />
+									</div>
+								</span>
+							</div>
+						</div>
+						<div class="cart-delete" v-bind:data-id="site.cart_id" onclick="removeCart(this)">
+							<img src="img/delete.png"/>
+						</div>
+						</template>
+					</div>
+				</div>
+				</div>
+				<!--人气推荐-->
+				<div class="index-title">
+					<span></span>
+					<img src="img/shop03_07.png"/>
+					<span>
+					</span>
+				</div>
+				<div class="index-main heat" id="jingpin">
+					<div class="index-tab" @click="setId(site.id)" v-for="site in sites">
+						<template>
+						<img v-bind:src="site.cover" />
+						<div class="title">
+							{{site.name}}
+						</div>
+						<div class="money">
+							<span>
+								¥{{site.price}}
+							</span> 可用券{{site.add_cardvolume}}
+						</div>
+						<div class="sales">
+							销量:{{site.sales}}
+						</div>
+						</template>
+					</div>
+				</div>
+			</div>
+			<div class="cart-bottom">
+				<div class="bootom-price">
+					<span class="radio">
+						<div class="allradio" id="allradio">
+							<img src="img/register_07.png"/>
+						</div>
+						全选
+					</span>
+					<span class="bottom-money">
+						合计: <strong  id="sum_money"></strong>
+					</span>
+				</div>
+				<div id="goPay" class="bottom-buy">
+					去结算
+				</div>
+			</div>
+			<!--底部导航栏-->
+			<bottom class='bottom'>
+				<div class="bottom-tab" data-target='index'>
+					<img src="img/index01.png" />
+					<span>
+						首页
+					</span>
+				</div>
+				<div class="bottom-tab" data-target='course'>
+					<img src="img/bottom02.png" />
+					<span>
+						课程
+					</span>
+				</div>
+				<div class="bottom-tab" data-target='shop'>
+					<img src="img/index03.png" />
+					<span>
+						商城
+					</span>
+				</div>
+				<div class="bottom-tab active"  data-target='shopcart'>
+					<img src="img/bottom04-active.png"/>
+					<span>
+						购物车
+					</span>
+				</div>
+				<div class="bottom-tab" data-target='user'>
+					<img src="img/my.png" />
+					<span>
+						我的
+					</span>
+				</div>
+			</bottom>
+		</div>
+	</body>
+	<script type="text/javascript">
+	function setId(id){
+	   	localStorage.GoodsId=id;
+	   	opennew2('goodsdetail');
+	}
+	function opennew2(target){
+		mui.openWindow({
+			url: '' + target + '.html',
+			id: '' + target + ''
+		})
+	}
+	function ceshi(obj){
+		var id=$(obj).attr('data-id');
+		var obj2=$(obj).parent().parent().find('.mui-numbox');
+		var byNumber=mui(obj2).numbox().getValue();
+		save(id,byNumber);
+		$(obj2).parent().find('.shop-num').html('数量  x'+byNumber);
+	}
+	function removeCart(obj){
+		var id=$(obj).attr('data-id');
+		var parentObj=$(obj).parent();
+		 $.ajax({
+					type:"post",
+					url:window.Config.ApiServer+"/shops/",
+					data:{
+						"service":"ShoppingCart.deleteShopingCart",
+						"id":id,
+						"signature":localStorage.getItem("token")
+					},
+					async:true,				
+					success: function(data){
+					   $(parentObj).remove();
+                    },
+		            error: function(error) {
+		                console.log(error);
+		           }
+	    });
+	}
+	/*修改个数*/
+	function save(id,value){
+		$.ajax({
+							type:"post",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"ShoppingCart.updateShopingCard",
+								"id":id,
+								"byCount":value,
+								"signature":localStorage.getItem("token")
+							},
+							async:true,				
+							success: function(data){
+			                   console.log(data);
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				           }
+			  });
+	}
+	function selectAll(obj){
+		 	     if($(obj).hasClass('active')){
+		 	     	$(obj).removeClass('active');
+		 	     	$(obj).parent().parent().find('.round').removeClass('active');
+		 	     }
+		 	     else{
+		 	     	$(obj).addClass('active');
+					$(obj).parent().parent().find('.round').addClass('active');
+		 	     }
+		 	     updateSumMoney2();
+	}
+	function updateSumMoney2(obj){
+		var list= $('.round');
+				sum=0.00;
+				for(i=0;i<list.length;i++){
+					var obj=list[i];					
+					if($(obj).hasClass('active')){
+						var priceObj=$(list[i]).parent().find('.cart-text').find('.cart-price').find('.count');
+						var byCountObj=$(priceObj).find('.mui-numbox');
+						var byCount=mui(byCountObj).numbox().getValue();
+						var jiage= $(priceObj).find('.byPrice');
+						var price=$(jiage).val();
+						/*var is_price=((Number(price)*Number(byCount).toFixed(2));*/
+						var is_price=((Number(price)*Number(byCount)).toFixed(2));
+						sum=(Number(sum)+Number(is_price)).toFixed(2);
+						console.log(sum);
+					}
+				}
+				$('#sum_money').html('¥'+sum);
+	}
+		$(function() {
+			getData();
+			getRenQi();
+			function updateSumMoney(){
+				var list= $('.round');
+				sum=0.00;
+				for(i=0;i<list.length;i++){
+					var obj=list[i];					
+					if($(obj).hasClass('active')){
+						var priceObj=$(list[i]).parent().find('.cart-text').find('.cart-price').find('.count');
+						var byCountObj=$(priceObj).find('.mui-numbox');
+						var byCount=mui(byCountObj).numbox().getValue();
+						var jiage= $(priceObj).find('.byPrice');
+						var price=$(jiage).val();
+						/*var is_price=((Number(price)*Number(byCount).toFixed(2));*/
+						var is_price=((Number(price)*Number(byCount)).toFixed(2));
+						sum=(Number(sum)+Number(is_price)).toFixed(2);
+						console.log(sum);
+					}
+				}
+				$('#sum_money').html('¥'+sum);
+			}
+            function getData(){
+            	$.ajax({
+						type:"GET",
+						url:window.Config.ApiServer+"/shops/",
+						data:{
+							"service":"ShoppingCart.getShopCardByUser",
+							"signature": localStorage.getItem("token")
+						},
+						async:true,				
+						success: function(data){
+							console.log(JSON.stringify(data));
+							new Vue({
+							  el: '#list',
+							  data: {
+							    sites:data.data
+							  },
+							  mounted: function() {
+				              },
+				              methods:{
+				              	update2:function(index,id){
+				              		
+				              		if($('.round').eq(index).hasClass('active')){
+				              			$('.round').eq(index).removeClass('active');
+				              		}
+				              		else{
+				              			$('.round').eq(index).addClass('active');
+				              		}
+				              		updateSumMoney();
+				               }
+				             }
+							});
+							mui('.mui-numbox').numbox();
+							$('.cart-main').each(function(index,element){
+								var byNumber=$(element).find(".cart-text").find('.cart-price').find('.byNumber').val();
+								var obj=$(element).find(".cart-text").find('.cart-price').find('.mui-numbox');
+								mui(obj).numbox().setValue(byNumber);
+							})
+	                    },
+			            error: function(error) {
+			                console.log(error);
+			            }
+			    });	
+            }
+            function getRenQi(){
+            	/*精品商品*/ 
+				$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"Goods.indexSales",
+								"number":6
+							},
+							async:true,				
+							success: function(data){
+			                    new Vue({
+								  el: '#jingpin',
+								  data: {
+								    sites:data.data
+								  }
+								});
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				            }
+				     });
+            }
+			function plusReady() {
+				// 弹出系统等待对话框
+				var w = plus.nativeUI.showWaiting("数据加载中...");
+			}
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener("plusready", plusReady, false);
+			}
+			setTimeout(function() {
+				plus.nativeUI.closeWaiting()
+			}, 1000)
+			$('.bottom-tab').click(function() {
+				opennew($(this).attr('data-target'))
+			})
+			function opennew(target) {
+				mui.openWindow({
+					url: '' + target + '.html',
+					id: '' + target + ''
+				})
+			}
+			$('#goPay').click(function(){
+				var list=$('.round');
+				arrayData=new Array();
+				for(i=0;i<list.length;i++){
+					if($(list[i]).hasClass('active')){
+						var id= $(list[i]).attr("data-id");
+						arrayData.push(id);
+					}
+				}
+				localStorage.ShopCartIdArray=JSON.stringify(arrayData);
+				opennew('shoptoorder');
+			});
+			$('.round').click(function(){
+				if($(this).attr('class')=='round'){
+					$(this).addClass('active')
+				}else{
+					$(this).removeClass('active')
+				}
+			})
+			$('.top').click(function(){
+				if($(this).attr('class')=='top'){
+					$(this).addClass('active')
+					$(this).parent().parent().find('.round').addClass('active')
+				}else{
+					$(this).removeClass('active')
+					$(this).parent().parent().find('.round').removeClass('active')
+				}
+			})
+			$('.wrapper').scroll(function(){
+				if($('#main-inner').height()<=$(this).scrollTop()){
+					$('.index-title').css('position','fixed').css('top','.6rem')
+				}else{
+					$('.index-title').css('position','relative').css('top','0')
+				}
+			})
+			$('#allradio').click(function(){
+				if($(this).attr('class')=='allradio'){
+					$(this).addClass('active')
+					$('.round').addClass('active')
+					$('.top').addClass('active')
+				}else{
+					$(this).removeClass('active')
+					$('.round').removeClass('active')
+					$('.top').removeClass('active')
+				}
+				var ary=$('.cart-main');
+				if(ary.length==0){
+					$(this).removeClass('active')
+					$('.round').removeClass('active')
+					$('.top').removeClass('active')
+					return false;
+				}
+				updateSumMoney();
+			})
+			$('#editor').click(function(){
+				if($(this).html()=='编辑'){
+					$(this).html('保存')
+					$('.shop-num').hide()
+					$('.mui-numbox').show()
+					$('.cart-delete').animate({"width":".6rem"},200)
+				}else{
+					$(this).html('编辑')
+					$('.shop-num').show()
+					$('.mui-numbox').hide()
+					$('.cart-delete').animate({"width":"0"},200)
+				}
+			})
+		})
+	</script>
+
+</html>

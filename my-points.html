@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/main.css"/>
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<title></title>
+	</head>
+	<style>
+		.head span{width: .2rem;}
+		.mycart .price,.mycart .content{height: 4rem;}
+		.mycart .price .money{font-size: .7rem;}
+		.mycart .cart{font-size: .25rem;margin-top: .2rem;}
+	</style>
+	<body>
+		<div class="wrapper mycart">
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/cartright.png"/>
+				</span>
+				<div onclick="opennew('jjilulist')">我的积分</div>
+				<span class="head-setting" onclick="opennew('jjilulist')">
+					记录
+				</span>
+			</header>
+			<div class="main">
+				<div class="back"></div>
+				<div class="content">
+					<div class="content-inner">
+						<div class="price">
+							<div class="money" id="sum">0.00</div>
+							<div class="cart">可用积分</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+		function opennew(target) {
+			mui.openWindow({
+				url: '' + target + '.html',
+				id: '' + target + ''
+			})
+		}
+		    $.ajax({
+						type:"get",
+						url:window.Config.ApiServer+"/shops/",
+						data:{
+							"service":  "Users.getInfor",
+							"signature":localStorage.getItem('token')
+						},
+						async:true,				
+						success: function(data){
+							if(data.data.integral!=null){
+							   $('#sum').html(data.data.integral);
+							}
+	                    },
+			            error: function(error) {
+			            	console.log(JSON.stringify(data));
+			                console.log(error);
+			            }
+				    });  
+		</script>
+	</body>
+</html>

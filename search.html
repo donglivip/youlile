@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<style type="text/css">
+		body,html{overflow: hidden;}
+	</style>
+	<body>
+		<div class="wrapper index search shop" style="overflow: hidden;">
+			<!--顶部搜索框-->
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				</span>
+				<form action="">
+					<img src="img/shop02.png" />
+					<input id="searchText" type="text" placeholder="搜一下，发现精彩" />
+				</form>
+				<span id="goserach">
+					搜索
+				</span>
+			</header>
+			<div class="main">
+				<div class="search-top">
+					搜索历史
+				</div>
+				<div id="history">
+					<div class="seearch-main" @click="gosearch2(site)" v-for="site in sites">
+						<template>
+							<span>
+								{{site}}
+							</span>
+						</template>
+					</div>
+				</div>
+				<div class="search-clear">
+					<img src="img/search_03.png"/>
+					<span onclick="clearhis()">
+						清空搜索历史
+					</span>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script type="text/javascript">
+	    function clearhis(){
+	    	localStorage.removeItem('SchoolSearchHistory');
+	    	$('#history').html("");
+	    }
+	    function gosearch2(obj){
+	    	localStorage.searchText=obj;
+	    	opennew2('results');
+	    }
+	    function opennew2(target) {
+				mui.openWindow({
+					url: '' + target + '.html',
+					id: '' + target + ''
+				})
+		}
+		$(function() {
+			function plusReady() {
+				// 弹出系统等待对话框
+				var w = plus.nativeUI.showWaiting("数据加载中...");
+				if(localStorage.getItem('SchoolSearchHistory')!=null){
+					new Vue({
+								  el: '#history',
+								  data: {
+								    sites:JSON.parse(localStorage.getItem('SchoolSearchHistory'))
+								  }
+						    });
+				}
+			}
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener("plusready", plusReady, false);
+			}
+			setTimeout(function() {
+				plus.nativeUI.closeWaiting()
+			}, 1000)
+			$('#goserach').click(function() {
+				localStorage.searchText=$('#searchText').val();
+				var obj=localStorage.getItem('SchoolSearchHistory');
+				window.hisArray=new Array();
+				console.log(obj);
+				if(obj !=null){
+				    window.hisArray= JSON.parse(localStorage.getItem('SchoolSearchHistory'));
+				}
+				console.log(window.hisArray);
+				window.hisArray.push(localStorage.getItem('searchText'));
+				localStorage.SchoolSearchHistory=JSON.stringify(window.hisArray);
+				console.log(JSON.stringify(localStorage.SchoolSearchHistory));
+				opennew('results');
+			})
+			function opennew(target) {
+				mui.openWindow({
+					url: '' + target + '.html',
+					id: '' + target + ''
+				})
+			}
+
+		})
+	</script>
+
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.4&key=3adc59b361b877d943cda0ce50b9b4da"></script>
+		<script src="http://webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<div class="wrapper course results">
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					<img src="img/shoplist_03.png" />
+				</div>
+				<span></span>
+			</header>
+			<div class="main shoplist">
+				<div class="shoplist-nav">
+					<div class="nav-tab active" id="all">
+						<span class="tab-name">
+								全部商品
+							</span>
+						<div class="tab-box">
+							<img src="img/shoplist_13.png" class="up" />
+							<img src="img/shoplist_10.png" class="botom" />
+						</div>
+					</div>
+					<div class="nav-tab" id="price">
+						<span class="tab-name">
+								价格
+							</span>
+						<div class="tab-box">
+							<div class="default">
+								<img src="img/shoplist_07.png" />
+								<img src="img/shoplist_13.png" />
+							</div>
+							<div class="upshow">
+								<img src="img/sjoplist_03.png" />
+								<img src="img/shoplist_13.png" />
+							</div>
+							<div class="bottomshow">
+								<img src="img/shoplist_07.png" />
+								<img src="img/shoplist_10.png" />
+							</div>
+						</div>
+					</div>
+					<div class="nav-tab" id="num">
+						<span class="tab-name">
+								销量
+							</span>
+						<div class="tab-box">
+							<div class="default">
+								<img src="img/shoplist_07.png" />
+								<img src="img/shoplist_13.png" />
+							</div>
+							<div class="upshow">
+								<img src="img/sjoplist_03.png" />
+								<img src="img/shoplist_13.png" />
+							</div>
+							<div class="bottomshow">
+								<img src="img/shoplist_07.png" />
+								<img src="img/shoplist_10.png" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="course-main">
+					<div class="course-box">
+						<div class="course-group">
+							<img src="img/back.jpg" class="school-img" />
+							<div class="course-text">
+								<h1>
+										徐州市星海舞蹈艺术中心
+									</h1>
+								<div class="school-price">
+									¥ <strong>1799.00</strong> + 券1200.00
+								</div>
+								<div class="school-num">
+									<span class="money-old">
+											市场价:¥3280.00
+										</span>
+									<span>
+											销量：718
+										</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="shoplist-alert">
+					<div class="alert-group activenav">
+						<img src="img/shoplist03_03.png"/>
+						<img src="img/shopnav_06.png" class="type-img"/>
+						<span>
+							家用电器
+						</span>
+					</div>
+					<div class="alert-group">
+						<img src="img/shoplist03_03.png"/>
+						<img src="img/shopnav_08.png" class="type-img"/>
+						<span>
+							数码产品
+						</span>
+					</div>
+					<div class="alert-group">
+						<img src="img/shoplist03_03.png"/>
+						<img src="img/shopnav_10.png" class="type-img"/>
+						<span>
+							居家生活
+						</span>
+					</div>
+					<div class="alert-group">
+						<img src="img/shoplist03_03.png"/>
+						<img src="img/shopnav_03.png" class="type-img"/>
+						<span>
+							衣帽穿戴
+						</span>
+					</div>
+					<div class="alert-group">
+						<img src="img/shoplist03_03.png"/>
+						<img src="img/shopnav_16.png" class="type-img"/>
+						<span>
+							食品超市
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(function() {
+				function opennew(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+				}
+				//				全部商品
+				$('#all').click(function() {
+					$('.upshow').hide()
+					$('.bottomshow').hide()
+					$('.nav-tab').removeClass('active')
+					$(this).addClass('active')
+					$('.default').show()
+					$('#all .botom').show()
+					$('.shoplist-alert').css('top',0)
+				})
+				//				按价格排序
+				$('#price').click(function() {
+					tab(0)
+				})
+				//				按销量排序
+				$('#num').click(function() {
+					tab(1)
+				})
+				$('.alert-group').click(function(){
+					$('.alert-group').removeClass('activenav')
+					$(this).addClass('activenav')
+				})
+				$('.shoplist-alert').click(function(){
+					$(this).css('top','-100%')
+				})
+				$('.course-group').click(function(){
+					opennew('goodsdetail')
+				})
+				function tab(index) {
+					$('.default').show()
+					$('#all .botom').hide()
+					if(index == 0) {
+						$('.upshow').eq(1).hide()
+						$('.bottomshow').eq(1).hide()
+					} else {
+						$('.upshow').eq(0).hide()
+						$('.bottomshow').eq(0).hide()
+					}
+					$('.nav-tab').removeClass('active')
+					$(this).addClass('active')
+					$('.default').eq(index).hide()
+					if($('.upshow').eq(index).css('display') == 'none') {
+						$('.upshow').eq(index).show()
+						$('.bottomshow').eq(index).hide()
+					} else {
+						$('.bottomshow').eq(index).show()
+						$('.upshow').eq(index).hide()
+					}
+				}
+			})
+		</script>
+	</body>
+
+</html>

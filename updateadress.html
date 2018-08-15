@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/mui.picker.css"/>
+		<link rel="stylesheet" type="text/css" href="css/mui.poppicker.css"/>
+		<link rel="stylesheet" type="text/css" href="css/main.css"/>
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="wrapper adresslist">
+			<div class="head">
+				<span class="header-back" onclick="opennew('adresslist');">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					修改收货地址
+				</div>
+				<span>
+					
+				</span>
+			</div>
+			<div class="main">
+				<div class="input-group">
+					<label for="name">
+						收货人：
+					</label>
+					<input type="text" name="name" id="name" placeholder="请填写收货人姓名"/>
+				</div>
+				<div class="input-group">
+					<label for="phone">
+						联系方式：
+					</label>
+					<input type="text" name="phone" id="phone" placeholder="请填写联系方式" />
+				</div>
+				<div class="input-group">
+					<label for="adres">
+						所在地区：
+					</label>
+					<input type="text" name="showCityPicker3" id="showCityPicker3" placeholder="请选择所在的省市区"/>
+					<div id='cityResult3' class="ui-alert"></div>
+				</div>
+				<div class="input-group">
+					<label for="detail">
+						详细地址：
+					</label>
+					<input type="text" name="detail" id="detail" placeholder="街道门牌号" />
+				</div>
+				<div class="input-group default">
+					<label for="detail">
+						<span>设为默认：</span>
+						<span class="grey">注：每次下单时会默认使用此地址</span>
+					</label>
+					<div id="is_default" class="mui-switch mui-switch-blue mui-switch-mini">
+					  <div class="mui-switch-handle"></div>
+					</div>
+				</div>
+			</div>
+			<div class="bottom" onclick="save()">
+				<div>
+					保存
+				</div>
+			</div>
+		</div>
+		<script src="js/city.data-3.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/city.data.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.picker.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.poppicker.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+						//三级选择器
+           
+			(function($, doc) {
+				$.init();
+				$.ready(function() {
+					 getData();
+					/**
+					 * 获取对象属性的值
+					 * 主要用于过滤三级联动中，可能出现的最低级的数据不存在的情况，实际开发中需要注意这一点；
+					 * @param {Object} obj 对象
+					 * @param {String} param 属性名
+					 */
+					var _getParam = function(obj, param) {
+						return obj[param] || '';
+					};
+
+					var cityPicker3 = new $.PopPicker({
+						layer: 3
+					});
+					cityPicker3.setData(cityData3);
+					var showCityPickerButton = doc.getElementById('showCityPicker3');
+					var cityResult3 = doc.getElementById('cityResult3');
+					showCityPickerButton.addEventListener('tap', function(event) {
+						cityPicker3.show(function(items) {
+							window.province=_getParam(items[0], 'text');
+							window.city=_getParam(items[1], 'text');
+							window.district=_getParam(items[2], 'text');
+							showCityPickerButton.value = "" + _getParam(items[0], 'text') + " " + _getParam(items[1], 'text') + " " + _getParam(items[2], 'text');
+						});
+					}, false);
+				});
+
+			})(mui, document);
+			$(function(){
+				if(localStorage.getItem('adressid')!=null){
+					$('.head div').html('编辑收货地址')
+				}
+			})
+			/*获取数据*/
+			function opennew(target) {
+				var wobj = plus.webview.getWebviewById("adresslist");
+	            wobj.reload(true);
+				mui.openWindow({
+					url: '' + target + '.html',
+					id: '' + target + ''
+				})
+			}
+			function getData(){
+				console.log(localStorage.getItem('adressid'));
+				$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"ShippingAddress.getAddress",
+								"signature":localStorage.getItem('token'),
+								"id":localStorage.getItem('adressid')
+							},
+							async:true,				
+							success: function(data){
+								console.log(JSON.stringify(data));
+			                    var name=data.data.users_name;
+			                    var phone=data.data.phone;
+			                    var detail=data.data.detailed_address;
+			                    $('#name').val(name);
+			                    $('#phone').val(phone);
+			                    $('#detail').val(detail);
+			                    window.province=data.data.province;
+							    window.city=data.data.city;
+							    window.district=data.data.district;
+							    var show= window.province+" "+window.city+" "+window.district+" ";
+							    $('#showCityPicker3').val(show);
+							    if(data.data.is_default==1){
+							    	$('#is_default').addClass('mui-active');
+							    }
+							    else{
+							    	$('#is_default').removeClass('mui-active');
+							    }
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				            }
+				     });
+			}
+			function save(){
+				var signature=localStorage.getItem("token");
+				var users_name=$('#name').val();
+				var phone=$('#phone').val();
+				var country='中国';
+				var province=window.province;
+				var city=window.city
+				var district=window.district;
+				var detailed_address=$('#detail').val();
+			    if($('#is_default').hasClass('mui-active')){
+			        is_default=1;
+			    }
+			    else{
+			    	is_default=0;
+			    }
+			    $.ajax({
+							type:"post",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"ShippingAddress.updateAdress",
+								"id":localStorage.getItem('adressid'),
+								"signature" : signature,
+								"users_name": users_name,
+								"phone": phone,
+								"country": country,
+								"province": province,
+								"city": city,
+								"district": district,
+								"detailed_address": detailed_address,
+								'is_default':is_default
+							},
+							async:false,				
+							success: function(data){
+								mui.toast(data.info);
+								opennew('adresslist');
+								
+		                    },
+				            error: function(error) {
+				                console.log(JSON.stringify(error));
+				            }
+				   });			    
+			}
+		</script>
+	</body>
+</html>

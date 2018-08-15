@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<div class="wrapper shopdetail question">
+			<!--提示框-->
+			<div class="myalert">
+				<div class="alert-main">
+					<div class="text">
+						您的建议我们已收到
+					</div>
+					<div class="setting">
+						<div id="no">
+							取消
+						</div>
+						<div id="yes">
+							确定
+						</div>
+					</div>
+				</div>
+			</div>
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					设置中心
+				</div>
+				<span>
+					
+				</span>
+			</header>
+			<div class="main">
+				<div class="question-group new">
+					<span>
+						检测更新
+					</span>
+				</div>
+				<div class="question-group about">
+					<span>
+						关于我们
+					</span>
+					<span style="text-align: right;">
+						V26.9
+					</span>
+				</div>
+				<div class="clear">
+					退出登录
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(function(){
+				var loginx={
+						LogOut:function(callback){
+						//do something
+						//callback
+						callback&&callback()
+					    }
+				}
+				$('.clear').click(function(){
+					 localStorage.clear();
+					 opennew('login');
+				})
+				$('.about').click(function(){
+					opennew('about-us')
+				})
+				$('.new').click(function(){
+//					获取当前应用版本
+					/*function plusReady() {
+						plus.runtime.getProperty(plus.runtime.appid, function(inf) {
+							wgtVer = inf.version;
+							$.ajax({
+								type: "get",
+								url: ,
+								dataType: 'json',
+								async: true,
+								success: function(res) {
+//									获取服务器版本并对比
+									if(res.data.versionUserCode != wgtVer) {
+										// 弹出提示信息对话框
+										plus.nativeUI.confirm("有新版本发布啦,是否立即下载??", function(e) {
+//											打开浏览器下载
+											plus.runtime.openURL(res.data.versionAndroidUserUploadUrl)
+										});
+									}
+								}
+							})
+						});
+					}*/
+				})
+				function opennew(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+				}
+			})
+		</script>
+	</body>
+</html>

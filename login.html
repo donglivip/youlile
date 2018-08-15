@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/main.css"/>
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<style type="text/css">
+		body,html{background: #fff;}
+	</style>
+	<body>
+		<div class="wrapper login">
+			<!--顶部搜索框-->
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					
+				</div>
+				<span>
+					
+				</span>
+			</header>
+			<div class="main">
+				<img src="img/login_03.png" class="logo"/>
+				<form action="#" onsubmit="return false">
+					<div class="input-group">
+						<img src="img/login_07.png"/>
+						<input type="number" id="phone" placeholder="请输入手机号"/>
+						<img src="img/login_10.png" id="clear"/>
+					</div>
+					<div class="input-group">
+						<img src="img/login_14.png"/>
+						<input type="password" id="password" placeholder="请输入密码"/>
+						<img src="img/login_16.png" id="passchange"/>
+					</div>
+					<div class="input-group" style="border: 0;" onclick="opennew('givepass')">
+						忘记密码 ?
+					</div>
+					<input type="submit" name="mysubmit" id="mysubmit" onclick="land()" value="登录" />
+					<div class="input-group" style="border: 0;">
+						<!--<span onclick="opennew('newlogin')">
+							无密码登录
+						</span>-->
+						<span style="text-align: right;" onclick="opennew('register')">
+							注册
+						</span>
+					</div>
+				</form>
+			</div>
+		</div>
+		<script type="text/javascript">
+			function opennew(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+				}
+			function land(){
+					var phone= $('#phone').val();
+				    var passwords=$('#password').val();
+						$.ajax({
+									type:"post",
+									url:window.Config.ApiServer+"/shops/",
+									data:{
+										"service":"Users.land",
+										"account":phone,
+										"pwd":passwords
+									},
+									async:false,				
+									success: function(data){
+										if(data.data.code==1){
+										  localStorage.token=data.data.token;
+										  clear();
+					                    }
+										else{
+											mui.toast(data.data.info);
+										}
+				                    },
+						            error: function(error) {
+						                console.log(JSON.stringify(error));
+						            }
+						    });	
+		     }
+			function clear(){
+				   opennew('index');
+				   var wobj = plus.webview.getWebviewById("user");
+                   wobj.reload(true);
+			}
+			$(function(){
+				$('#clear').click(function(){
+					$(this).prev().val()
+				})
+				$('#passchange').click(function(){
+					if($(this).prev().attr('type')=='password'){
+						$(this).prev().attr('type','text')
+					}else{
+						$(this).prev().attr('type','password')
+					}
+				});
+				
+				$('#mysubmit').click(function(){
+					land();
+				});
+			})
+		</script>
+	</body>
+</html>

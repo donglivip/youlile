@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.4&key=3adc59b361b877d943cda0ce50b9b4da"></script>
+		<script src="http://webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<div class="wrapper school ratingall">
+			<!--视频全屏播放容器-->
+			<div class="myvideo">
+				<video autoplay="autoplay" controls="controls"></video>
+			</div>
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					评论
+				</div>
+				<span>
+					
+				</span>
+			</header>
+			<div class="main">
+				
+				<div class="rating-main" id="list">
+					<div class="school-group" v-for="site in sites">
+						<div class="rating-group">
+							<img v-bind:src="site.head_portrait" class="avatar" />
+							<div class="rating-main">
+								<div class="rating-name">
+									<span>
+											{{site.nick_name}}
+									</span>
+								</div>
+								<div class="rating-text">
+									{{site.body}}
+								</div>
+								<div class="rating-inform">
+									<span>
+											
+								    </span>
+									<span>
+										{{site.review_time}}
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script>
+			$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"School.commentList",
+								"schoolId": localStorage.getItem("SchoolId"),
+								"number":   'all'
+							},
+							async:true,				
+							success: function(data){
+								console.log(JSON.stringify(data));
+								new Vue({
+								  el: '#list',
+								  data:{
+								  	sites:data.data
+								  }
+								});						
+		                    },
+				            error: function(error) {
+				            	console.log(JSON.stringify(data));
+				                console.log(error);
+				            }
+				    });
+		</script>
+	</body>
+
+</html>

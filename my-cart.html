@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<link rel="stylesheet" href="css/swiper.min.css">
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/swiper.min.js"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<div class="wrapper orderhistory cart">
+			<!--提示框-->
+			<div class="myalert">
+				<div class="alert-main">
+					<div class="text">
+						您确定取消此订单？
+					</div>
+					<div class="setting">
+						<div id="no">
+							取消
+						</div>
+						<div id="yes">
+							确定
+						</div>
+					</div>
+				</div>
+			</div>
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					我的课卡
+				</div>
+				<span>
+					
+				</span>
+			</header>
+			<div class="main">
+				<div class="top-nav">
+					<div class="nav-tab active">
+						未支付
+					</div>
+					<div class="nav-tab">
+						已支付
+					</div>
+				</div>
+				<div class="swiper-container">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide" id="unPay">
+							<img src="img/orderhistory_03.png" class="noorder"/>
+						</div>
+						<div class="swiper-slide" id="isPay">
+							<div class="cart-group" v-for="site in sites">
+								<template>
+									<div class="cart-name">
+										{{site.by_name}}
+									</div>
+									<div class="cart-money">
+										<span class="cart-type">
+											{{site.type_text}}
+										</span>
+										<div class="cart-price">
+											<span>¥</span>
+											{{site.payment}}
+										</div>
+									</div>
+									<div class="cart-setting">
+										<span class="cart-num">
+											课程编号:{{site.id}}
+										</span>
+										<!--<span class="rating">
+											立即评价
+										</span>-->
+									</div>
+								</template>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(function() {
+				var mySwiper;
+				mySwiper = new Swiper('.swiper-container', {
+					nested: true,
+					on: {
+						slideChangeTransitionEnd: function() {
+							$('.top-nav .nav-tab').removeClass('active')
+							$('.top-nav .nav-tab').eq(this.activeIndex).addClass('active')
+						}
+					},
+				})
+				$('.top-nav .nav-tab').click(function(){
+					$('.top-nav .nav-tab').removeClass('active')
+					$(this).addClass('active')
+					mySwiper.slideTo($('.nav-tab').index(this), 1000, false); 
+				})
+				function opennew(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+				}
+				getData();
+				function getData(){
+					$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"CourseOrder.getOrderList",
+								"signature":localStorage.getItem('token'),
+								"getType":"isPay"
+							},
+							async:true,				
+							success: function(data){
+							    console.log(JSON.stringify(data));
+			                    new Vue({
+								  el: '#isPay',
+								  data: {
+								    sites:data.data
+								  }
+								});
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				            }
+				    });
+				}
+			})
+		</script>
+	</body>
+
+</html>

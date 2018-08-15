@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.tmpl.js"></script>
+	</head>
+	<body >
+		<div class="wrapper course results">
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					<span id="select">
+						
+					</span>
+					<img src="img/shoplist_13.png" class="top-img"/>
+				</div>
+				<span class="search">
+					<img src="img/list_03.png"/>
+				</span>
+			</header>
+			<div class="main shoplist goodlist" id="main">
+				<img src="img/list_06.png" class="main-img"/>
+				<div class="goodtype">
+					<div class="goodsubtype good-this"  data-id="2">
+						积分商品
+					</div>
+					<div class="goodsubtype" data-id="0">
+						特价商品
+					</div>
+				</div>
+				<div class="shoplist-nav">
+					<div class="nav-tab active" id="all">
+						<span class="tab-name">
+								综合
+						</span>
+					</div>
+					<div class="nav-tab" id="price">
+						<span class="tab-name">
+								价格
+							</span>
+						<div class="tab-box">
+							<div class="default">
+								<img src="img/shoplist_07.png" />
+								<img src="img/shoplist_13.png" />
+							</div>
+							<div class="upshow">
+								<img src="img/sjoplist_03.png" />
+								<img src="img/shoplist_13.png" />
+							</div>
+							<div class="bottomshow">
+								<img src="img/shoplist_07.png" />
+								<img src="img/shoplist_10.png" />
+							</div>
+						</div>
+					</div>
+					<div class="nav-tab" id="num">
+						<span class="tab-name">
+								销量
+							</span>
+						<div class="tab-box">
+							<div class="default">
+								<img src="img/shoplist_07.png" />
+								<img src="img/shoplist_13.png" />
+							</div>
+							<div class="upshow">
+								<img src="img/sjoplist_03.png" />
+								<img src="img/shoplist_13.png" />
+							</div>
+							<div class="bottomshow">
+								<img src="img/shoplist_07.png" />
+								<img src="img/shoplist_10.png" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="course-main" >
+					<div class="course-box" id="goodList">
+						
+					</div>
+				</div>
+				<div class="shoplist-alert" id="type_list">
+					
+				</div>
+			</div>
+		</div>
+		<div id="temp2" style="display: none;">
+			<div class="alert-group" data-id="${id}">
+						<img src="img/shoplist03_03.png"/>
+						<img src="img/shopnav_06.png" class="type-img"/>
+						<span>
+							${class_name}
+						</span>
+			</div>
+		</div>
+		<div id="temp" style="display: none;" >
+			<div class="course-group" onclick="movetogoods(${id})">
+					<div style="width: 97px;height: 97px;float: left;"><img src="${cover}"  class="school-img" /></div>
+					<div class="course-text">
+						    <h1>
+								${name} 
+							</h1>
+						<div class="school-price">
+							{{if goods_type!=2}}
+							<span>
+								¥ <strong>${price}</strong><span class="yellow">增:${add_integral}积分</span>
+							</span>
+							{{/if}}
+							{{if goods_type==2}}
+							<span>
+								积分: <strong>${price}</strong><span class="yellow"></span>
+							</span>
+							{{/if}}
+							{{if goods_type!=2}}
+							<span>
+								可用券<strong>${card_volume_limit}</strong>
+							</span>
+							{{/if}}
+						</div>
+						<div class="school-num">
+							<span class="money-old"></span>
+							<span>
+									销量：${sales}
+							</span>
+						</div>
+					</div>
+			</div>
+		</div>	
+		<script type="text/javascript">
+		    function movetogoods(id){
+		    	localStorage.GoodsId=id;
+		    	opennew2('goodsdetail');
+		    }
+		    function opennew2(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+		    }
+		    window.limit=5;
+		    window.page=1;
+			$(function() {
+				function opennew(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+				}
+				getType();
+				function getType(){
+					$.ajax({
+									type:"get",
+									url:window.Config.ApiServer+"/shops/",
+									data:{
+										"service":"Goods.getGoodsType"
+									},
+									async:true,				
+									success: function(data){
+										console.log(JSON.stringify(data));
+										 $("#temp2").tmpl(data.data).appendTo("#type_list");
+										 $('.alert-group').click(function(){
+													$('.alert-group').removeClass('activenav')
+													$(this).addClass('activenav');
+													window.typeId=$(this).attr('data-id');
+													$('.head div span').html($(this).children('span').html());
+													window.order='p_asc';
+													window.page=1;
+													$('#goodList').html("");
+													LoadingDataFn(1,window.limit);
+												})
+												$('.shoplist-alert').click(function(){
+													$(this).css('top','-100%')
+												});
+												window.typeId=localStorage.getItem('GoodsType');
+												window.order='p_asc';
+												var texts=$('.alert-group[data-id='+window.typeId+']').find('span').html();
+												$('.alert-group[data-id='+window.typeId+']').addClass('activenav');
+												$('#select').html(texts);
+												$('#goodList').html("");
+												window.page=1;
+												LoadingDataFn(1,window.limit);
+				                    },
+						            error: function(error) {
+						                console.log(error);
+						            }
+				    });	
+				}
+				function getGoodsType(){
+					window.goods_type=$('.good-this').attr('data-id');
+					return window.goods_type;
+				}
+				
+				$('.goodsubtype').click(function(){
+					$('.goodsubtype').removeClass('good-this')
+					$(this).addClass('good-this')
+				})
+				$('.main').scroll(function(){
+					if($(this).scrollTop()>$('.shoplist-nav').offset().top+40){
+						$('.shoplist-nav').css('position','absolute')
+					}else{
+						$('.shoplist-nav').css('position','inherit')
+					}
+				})
+				//				全部商品
+				$('#all').click(function() {
+					$('.upshow').hide()
+					$('.bottomshow').hide()
+					$('.nav-tab').removeClass('active')
+					$(this).addClass('active')
+					$('.default').show()
+					$('#all .botom').show()
+				})
+				//				按价格排序
+				$('#price').click(function() {
+					tab(0)
+				})
+				//				按销量排序
+				$('#num').click(function() {
+					tab(1)
+				})
+				$('.alert-group').click(function(){
+					$('.alert-group').removeClass('activenav')
+					$(this).addClass('activenav')
+					$('.head div span').html($(this).children('span').html())
+				})
+				$('.shoplist-alert').click(function(){
+					$(this).css('top','-100%')
+				})
+				$('.course-group').click(function(){
+					opennew('goodsdetail')
+				})
+				$('.head div').click(function(){
+					$('.shoplist-alert').css('top',0)
+				})
+				$('.wrapper').scroll(function(){
+					if($(this).scrollTop()>=($('.main-img').height()+$('.head').height())){
+						$('.shoplist-nav').css('position','fixed')
+					}else{
+						$('.shoplist-nav').css('position','inherit')
+					}
+				})
+				$('.search').click(function(){
+					opennew('search')
+				})
+				function tab(index) {
+					$('.default').show()
+					$('#all .botom').hide()
+					if(index == 0) {
+						$('.upshow').eq(1).hide()
+						$('.bottomshow').eq(1).hide()
+					} else {
+						$('.upshow').eq(0).hide()
+						$('.bottomshow').eq(0).hide()
+					}
+					$('.nav-tab').removeClass('active')
+					$(this).addClass('active')
+					$('.default').eq(index).hide()
+					if($('.upshow').eq(index).css('display') == 'none') {
+						if(index==0){
+						     window.order='p_asc';
+						     window.page=1;
+						     $('#goodList').html("");
+						     LoadingDataFn(1,window.limit);
+						}
+						else{
+							window.page=1;
+							window.order='s_asc';
+							$('#goodList').html("");
+							LoadingDataFn(1,window.limit);
+						}
+						$('.upshow').eq(index).show()
+						$('.bottomshow').eq(index).hide()
+					} else {
+						if(index==0){
+						   window.page=1;
+						   window.order='p_desc';
+						   $('#goodList').html("");
+						   LoadingDataFn(1,window.limit);
+						}
+						else{
+							window.page=1;
+							window.order='s_desc';
+							$('#goodList').html("");
+							LoadingDataFn(1,window.limit);
+						}
+						$('.bottomshow').eq(index).show()
+						$('.upshow').eq(index).hide()
+					}
+				}
+				$('.goodsubtype').click(function(){
+					$('#goodList').html("");
+					window.page=1;
+					window.order='p_asc';
+					LoadingDataFn(1,window.limit);
+				})
+				
+				/*上拉加载*/
+			    off_on = false, //分页开关(滚动加载方法 1 中用的)
+			    timers = null; //定时器(滚动加载方法 2 中用的)
+			//加载数据
+			var LoadingDataFn = function(page,limit) {
+				var arry=sendList(window.typeId,window.order,page,limit);
+			    $("#temp").tmpl(arry).appendTo("#goodList");
+			    off_on = true; //[重要]这是使用了 {滚动加载方法1}  时 用到的 ！！！[如果用  滚动加载方法1 时：off_on 在这里不设 true的话， 下次就没法加载了哦！]
+			};
+			
+			//初始化， 第一次加载
+			$(document).ready(function() {
+			    LoadingDataFn(1,window.limit);
+			});
+			
+			
+			//滚动加载方法2
+			$('#main').scroll(function() {
+				console.log('tt');
+			    //当时滚动条离底部60px时开始加载下一页的内容
+			    if (($(this)[0].scrollTop + $(this).height() + 160) >= $(this)[0].scrollHeight) {
+			        clearTimeout(timers);
+			        //这里还可以用 [ 延时执行 ] 来控制是否加载 （这样就解决了 当上页的条件满足时，一下子加载多次的问题啦）
+			        timers = setTimeout(function() {
+			            window.page++;
+			            console.log("第" + window.page + "页");
+			            LoadingDataFn(window.page,window.limit); //调用执行上面的加载方法
+			        }, 300);
+			    }
+			});
+			function sendList(typeId,order,page,limit){
+					var goodtype=getGoodsType();
+					dataarr=new Array();
+					$.ajax({
+									type:"get",
+									url:window.Config.ApiServer+"/shops/",
+									data:{
+										"service":"Goods.getGoodsListByType",
+										"typeId": typeId,
+										"order":  order,
+										"goods_type":goodtype,
+										"page":page,
+										"limit":limit
+									},
+									async:false,				
+									success: function(data){
+										console.log(JSON.stringify(data));
+										dataarr=data.data;
+				                    },
+						            error: function(error) {
+						                console.log(JSON.stringify(error));
+						            }
+						    });	
+						    return dataarr;
+			}
+			})
+		</script>
+		<script>
+		    
+		</script>
+	</body>
+
+</html>

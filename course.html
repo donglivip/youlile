@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.4&key=3adc59b361b877d943cda0ce50b9b4da"></script>
+		<script src="http://webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<div class="wrapper course">
+			<!--底部弹出新闻分类容器-->
+			<div class="bottom-nav">
+				<div class="btnav-top">
+					<img src="img/close_03.png"/>
+				</div>
+				<div class="bnav-main">
+					<div class="bnav-group activenav">
+						综合推荐
+					</div>
+					<div class="bnav-group">
+						艺术动态
+					</div>
+					<div class="bnav-group">
+						育儿资讯
+					</div>
+				</div>
+			</div>
+			<!--视频全屏播放容器-->
+			<div class="myvideo">
+				<video autoplay="autoplay" controls="controls"></video>
+			</div>
+			<header class="head">
+				<span id="city">
+					<span id="city01"></span>
+					<img src="img/course_03.png"/>
+				</span>
+				<div style="font-size: 0.34rem;">课程</div>
+				<span class="head-setting" onclick="opennew2('search')">
+					<img src="img/course_3.png"/>
+				</span>
+			</header>
+			<div class="main">
+				<div id="scroll">
+					<!--主体轮播图-->
+					<div class="mui-slider">
+						<div class="mui-slider-group" id="slide">
+								<div class="mui-slider-item" v-for="site in sites">
+									<a href="#"><img v-bind:src="site.url"/></a>
+								</div>	
+							<!--<div class="mui-slider-item video">
+								<video poster="img/back.jpg" src="img/UC-download.mp4"></video>
+								<img src="img/play.png" />
+							</div>-->
+						</div>
+					</div>
+					<div class="tabnav">
+						<div class="tab">
+							<img src="img/course02_03.png" onclick="moveToList(1)" />
+							<span>
+								钢琴
+							</span>
+						</div>
+						<div class="tab">
+							<img src="img/course02_05.png" onclick="moveToList(9)" />
+							<span>
+								古筝
+							</span>
+						</div>
+						<div class="tab">
+							<img src="img/course02_07.png" onclick="moveToList(2)"/>
+							<span>
+								吉他
+							</span>
+						</div>
+						<div class="tab">
+							<img src="img/course02_09.png" onclick="moveToList(3)"/>
+							<span>
+								声乐
+							</span>
+						</div>
+						<div class="tab">
+							<img src="img/course02_11.png" onclick="moveToList(4)"/>
+							<span>
+								绘画
+							</span>
+						</div>
+						<div class="tab">
+							<img src="img/course02_18.png" onclick="moveToList(5)" />
+							<span>
+								舞蹈
+							</span>
+						</div>
+						<div class="tab">
+							<img src="img/course02_19.png" onclick="moveToList(6)" />
+							<span>
+								打击乐
+							</span>
+						</div>
+						<div class="tab">
+							<img src="img/course02_20.png" onclick="moveToList(7)" />
+							<span>
+								口才
+							</span>
+						</div>
+						<div class="tab">
+							<img src="img/course02_21.png" onclick="moveToList(8)" />
+							<span>
+								武术
+							</span>
+						</div>
+						<div class="tab taball" style="margin: 0;">
+							<img src="img/course02_22.png" />
+							<span>
+								全部
+							</span>
+						</div>
+					</div>
+					<div class="course-main">
+						<div class="course-top">
+							学校推荐
+						</div>
+						<div class="course-box" id="tuijian">
+							<template>
+								<div class="course-group" @click="setId(site.basic_id)" v-for="site in sites">
+									<img v-bind:src="site.logo" class="school-img" />
+									<div class="course-text">
+										<h1>
+											{{site.sch_name}}
+										</h1>
+										<p>
+											{{site.pid_name}}{{site.is_name}}
+										</p>
+										<div class="school-inform">
+											<div class="inform-group">
+												<img src="img/course_12.png" />
+												<span>
+													学员：{{site.student_number}}
+												</span>
+											</div>
+											<div class="inform-group">
+												<img src="img/course_14.png" />
+												<span>
+													评分：{{site.score}}
+												</span>
+											</div>
+											<div class="inform-group">
+												<img src="img/course_16.png" />
+												<span>
+													热度：{{site.hot}}
+												</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</template>
+							<div class="course-group more"  onclick="localStorage.typeId=1;opennew2('courselistall')">
+								查看更多
+								<img src="img/user_31.gif" />
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<!--底部导航栏-->
+		<bottom class='bottom'>
+			<div class="bottom-tab" data-target='index'>
+				<img src="img/index01.png" />
+				<span>
+						首页
+					</span>
+			</div>
+			<div class="bottom-tab active" data-target='course'>
+				<img src="img/bottom02-active.png" />
+				<span>
+						课程
+					</span>
+			</div>
+			<div class="bottom-tab" data-target='shop'>
+				<img src="img/index03.png" />
+				<span>
+						商城
+					</span>
+			</div>
+			<div class="bottom-tab" data-target='shopcart'>
+				<img src="img/index04.png" />
+				<span>
+						购物车
+					</span>
+			</div>
+			<div class="bottom-tab" data-target='user'>
+				<img src="img/my.png" />
+				<span>
+						我的
+					</span>
+			</div>
+		</bottom>
+		<script type="text/javascript">
+		    
+		     var map, geolocation;
+    //加载地图，调用浏览器定位服务
+    map = new AMap.Map('container', {
+        resizeEnable: true
+    });
+    map.plugin('AMap.Geolocation', function() {
+        geolocation = new AMap.Geolocation({
+            enableHighAccuracy: true,//是否使用高精度定位，默认:true
+            timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+            buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+            zoomToAccuracy: true,      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+            buttonPosition:'RB'
+        });
+        map.addControl(geolocation);
+        geolocation.getCurrentPosition();
+        AMap.event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+        AMap.event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+    });
+    //解析定位结果
+    function onComplete(data) {
+        var str=['定位成功'];
+        str.push('经度：' + data.position.getLng());
+        var jingdu=data.position.getLng();
+        var weidu=data.position.getLat();
+        localStorage.jingdu=jingdu;
+        localStorage.weidu=weidu;
+        if(localStorage.getItem('selectCrity')===null || localStorage.getItem('selectCrity')==='')
+		{
+		     	localStorage.selectCrity=26;
+		}
+        getHot(jingdu,weidu);
+    }
+    //解析定位错误信息
+    function onError(data) {
+        console.log('定位失败');
+    }
+		
+		    function setId(id){
+			   	localStorage.SchoolId=id;
+			   	opennew2('schooldetail');
+		     }
+		    function moveToList(id){
+		    	localStorage.typeId=id;
+			   	opennew2('courselist');
+		    }
+		    function opennew2(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+			}
+			document.addEventListener('plusready', onPlusReady, false);
+			// 扩展API加载完毕，现在可以正常调用扩展API
+			function onPlusReady() {
+				getData();
+				plus.geolocation.getCurrentPosition(function(p) {
+					/*var map = new AMap.Map('container', {
+						zoom: 15,
+						center: [p.coords.longitude, p.coords.latitude]
+					});*/
+					/*AMap.service('AMap.Geocoder', function() {
+						geocoder = new AMap.Geocoder({
+							city: "" //城市，默认：“全国”
+						});
+						//		    根据经纬度查地址
+						var lnglatXY = [p.coords.longitude, p.coords.latitude]; //地图上所标点的坐标
+						geocoder.getAddress(lnglatXY, function(status, result) {
+							if(status === 'complete' && result.info === 'OK') {
+								$('#city01').html(result.regeocode.addressComponent.city)
+							} else {
+								//获取地址失败
+								that.city = '获取失败'
+							}
+						});
+					})*/
+				}, function(e) {
+					that.city = '获取失败'
+				});
+			}
+			function getData(){
+			if(localStorage.getItem('selectCrity')===null || localStorage.getItem('selectCrity')==='')
+		     {
+		     	localStorage.selectCrity=26;
+		     }
+				/*幻灯片*/
+				$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"Advertising.showListByAid",
+								"aId":4
+							},
+							async:true,				
+							success: function(data){
+			                    new Vue({
+								  el: '#slide',
+								  data: {
+								    sites:data.data
+								  },
+								  mounted: function() {
+					                var gallery = mui('.mui-slider');
+					                gallery.slider({
+					                    interval: 3000
+					                });
+					            },
+								});
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				            }
+				    });
+				
+				/*获取城市*/
+				$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"Region.getInforById",
+								"id":localStorage.getItem('selectCrity')
+							},
+							async:false,				
+							success: function(data){
+			                   console.log(JSON.stringify(data));
+			                   $('#city01').html(data.data.region_name);
+		                    },
+				            error: function(error) {
+				                console.log(JSON.stringify(error));
+				            }
+				    });
+			}
+			function getHot(jingdu,weidu){
+				/*学校推荐*/
+				$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"School.getSchoolByHot",
+								"number":10,
+								"regionId":localStorage.getItem('selectCrity'),
+								"jingdu":jingdu,
+								"weidu":weidu								
+							},
+							async:false,				
+							success: function(data){
+								console.log(JSON.stringify(data));
+			                    new Vue({
+								  el: '#tuijian',
+								  data: {
+								    sites:data.data
+								  }
+								});
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				            }
+				    });
+			}
+			$(function() {
+				var index=0
+				var gallery = mui('.mui-slider');
+				gallery.slider({
+					interval: 3000 //自动轮播周期，若为0则不自动播放，默认为0；
+				});
+				$('.video img').click(function() {
+					$(this).prev().click()
+				})
+				$('video').click(function() {
+					$('.myvideo video').attr('src', $(this).attr('src'))
+					$('.myvideo').show()
+				})
+				$('.myvideo').click(function() {
+					$('.myvideo').hide()
+					$('.myvideo video').attr('src', '')
+				})
+				$('.course-top span').click(function() {
+					index=$('.course-top span').index(this)
+					navactive()
+				})
+				$('.wrapper').scroll(function() {
+					if($('#scroll').height() <= $('.wrapper').scrollTop()) {
+						$('#scrolltop').css('position', 'fixed')
+					}else{
+						$('#scrolltop').css('position', 'inherit')
+					}
+				})
+				$('.moreimg').click(function(){
+					bottomshow()
+				})
+				$('.bottom-nav').click(function(){
+					bottomshow()
+				})
+				$('.bnav-group').click(function(){
+					index=$('.bnav-group').index(this)
+					navactive()
+				})
+				$('.bottom-tab').click(function() {
+					opennew($(this).attr('data-target'))
+				})
+	            $('#city').click(function(){
+	            	opennew('city');
+	            })
+	            $('.taball').click(function(){
+	            	opennew('taball');
+	            })
+				function opennew(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+				}
+				function navactive(){
+					$('.course-top span').removeClass('active')
+					$('.course-top span').eq(index).addClass('active')
+					$('.bnav-group').removeClass('activenav')
+					$('.bnav-group').eq(index).addClass('activenav')
+				}
+				function bottomshow(){
+					if($('.course .bottom-nav').css('bottom')!='0px'){
+						$('.course .bottom-nav').css('bottom','0')
+					}else{
+						$('.course .bottom-nav').css('bottom','-100%')
+					}
+				}
+				
+			})
+		</script>
+	</body>
+
+</html>

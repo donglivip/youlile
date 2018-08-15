@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/main.css"/>
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<title></title>
+	</head>
+	<style>
+		.head span{width: .2rem;}
+	</style>
+	<body>
+		<div class="wrapper mycart">
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/cartright.png"/>
+				</span>
+				<div>我的券包</div>
+				<span class="head-setting" onclick="opennew('kjilulist')">
+					<img src="img/car_03.png"/>
+					记录
+				</span>
+			</header>
+			<div class="main">
+				<div class="back"></div>
+				<div class="content">
+					<div class="content-inner">
+						<div class="price">
+							<div class="money" id="sum">0.00</div>
+							<div class="cart">可用券</div>
+						</div>
+						<div class="wait">
+							<div class="wait-group">
+								<div class="money" id="daifan">
+									0.00
+								</div>
+								<div class="cart">
+									待返
+								</div>
+							</div>
+							<div class="wait-group">
+								<div class="money" id="yiyong">
+									0.00
+								</div>
+								<div class="cart">
+									已用
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="record" id="list">
+					<div class="record-top">
+						<img src="img/car_07.png"/>
+						<span>
+							返券记录
+						</span>
+					</div>
+					<!--r如果有-->
+					<div class="record-group" v-for="site in sites">
+						<img src="img/car_10.png" class="avatar"/>
+						<span class="text">
+							{{site.money}}
+						</span>
+						<img src="img/user_31.gif" class="arr"/>
+					</div>
+					<!--如果没有-->
+					<img src="img/orderhistory_03.png" class="noorder" style="display: none;"/>
+				</div>
+			</div>
+		</div>
+		<script>
+		       function opennew(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+		        }
+			   getData();
+				function getData(){
+					$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"ReturnCard.getCard",
+								"signature":localStorage.getItem('token')
+							},
+							async:true,				
+							success: function(data){
+							    console.log(JSON.stringify(data));
+			                    new Vue({
+								  el: '#list',
+								  data: {
+								    sites:data.data
+								  }
+								});
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				            }
+				    });
+//				    $.ajax({
+//							type:"get",
+//							url:window.Config.ApiServer+"/shops/",
+//							data:{
+//								"service":"ReturnCard.getSumCard",
+//								"signature":localStorage.getItem('token')
+//							},
+//							async:true,				
+//							success: function(data){
+//							    console.log(JSON.stringify(data));
+//			                    $('#sum').html(data.data.sum_money);
+//		                    },
+//				            error: function(error) {
+//				                console.log(error);
+//				            }
+//				    });
+				    $.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"ReturnCard.getCardUnReturn",
+								"signature":localStorage.getItem('token')
+							},
+							async:true,				
+							success: function(data){
+							    console.log(JSON.stringify(data));
+							    if(data.data.sum_money==null){
+							    	$('#daifan').html('0.00');
+							    	$('#sum').html('0.00');
+							    }
+							    else{
+			                        $('#daifan').html(data.data.sum_money);
+			                    }
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				            }
+				    });
+				    $.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"ReturnCard.getCardIsReturn",
+								"signature":localStorage.getItem('token')
+							},
+							async:true,				
+							success: function(data){
+							    console.log(JSON.stringify(data));
+							    if(data.data.sum_money==null){
+							    	$('#sum').html(0.00);
+							    }
+							    else{
+							    	
+			                        $('#sum').html(data.data.sum_money);
+			                    }
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				            }
+				    });
+				    $.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"ReturnCard.getCardIsNot",
+								"signature":localStorage.getItem('token')
+							},
+							async:true,				
+							success: function(data){
+							    console.log(JSON.stringify(data));
+							    if(data.data.sum_money==null){
+							    	$('#yiyong').html(0.00);
+							    }
+							    else{
+							    	
+			                        $('#yiyong').html(data.data.sum_money);
+			                    }
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				            }
+				    });
+				}
+		</script>
+	</body>
+</html>

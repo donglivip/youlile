@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<style type="text/css">
+		body,.html{background: rgb(248,248,248);}
+	</style>
+	<body>
+		<div class="wrapper login register">
+			<!--顶部搜索框-->
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					重置
+				</div>
+				<span onclick="opennew('login')">
+					完成
+				</span>
+			</header>
+			<div class="main">
+				<h1>
+					已向您的手机号发送验证码，请注意查收
+				</h1>
+				<div class="input-group">
+						<img src="img/register_03.png"/>
+						<input type="number" id="verification" placeholder="请输入验证码"/>
+						<div onclick="yanzheng()">
+							重新获取
+						</div>
+					</div>
+				<div class="input-group">
+					<img src="img/login_14.png" />
+					<input type="password" id="passwords" placeholder="请输入密码" />
+				</div>
+				
+			</div>
+		</div>
+		<script type="text/javascript">
+		    function yanzheng(){
+		    	$.ajax({
+							type:"post",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"Users.getPassVerificationRepeat",
+								"phoneNumber":localStorage.getItem("phoneNumber"),
+								"token":localStorage.getItem('registerToken')
+							},
+							async:false,				
+							success: function(data){
+								console.log(JSON.stringify(data));
+								if(data.data.code==1){
+									mui.toast('发送成功');
+									console.log(JSON.stringify(data));
+								}
+		                    },
+				            error: function(error) {
+				                console.log(JSON.stringify(error));
+				            }
+				  });	
+		    }
+			function opennew(target) {
+				$.ajax({
+							type:"post",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"Users.changePassword",
+								"account":localStorage.getItem("phoneNumber"),
+								"pwd":$('#passwords').val(),
+								"registeredToken":localStorage.getItem("registerToken"),
+								"verification": $('#verification').val()
+							},
+							async:false,				
+							success: function(data){
+								console.log(JSON.stringify(data));
+								if(data.data.code==1){
+									
+									target='login';
+									mui.openWindow({
+										url: '' + target + '.html',
+										id: '' + target + ''
+									})
+								}
+								else{
+									mui.toast(data.data.info);
+								}
+		                    },
+				            error: function(error) {
+				                console.log(JSON.stringify(error));
+				            }
+				  });	
+			}
+			$(function(){
+				$('.registergp img').click(function(){
+					$(this).hide()
+					$(this).next().show()
+				})
+				$('.registergp div').click(function(){
+					$(this).hide()
+					$(this).prev().show()
+				})
+			})
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<link rel="stylesheet" href="css/swiper.min.css">
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/swiper.min.js"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>	
+	</head>
+
+	<body>
+		<div class="wrapper index shop" id="app">
+			<div class="myvideo">
+				<video autoplay="autoplay" controls="controls"></video>
+			</div>
+			<!--顶部弹出分类-->
+			<div class="alert">
+				<div class="alert-main" id="alert">
+					<div class="alert-top">
+						<span>
+							全部
+						</span>
+						<span>
+							<img src="img/arrtop.png"/>
+						</span>
+					</div>
+					<div class="alert-group" @click="goToList(site.id)" v-for="site in sites">
+						<img v-bind:src="site.class_logo" />
+						<template>
+							<span>
+								{{site.class_name}}
+							</span>
+						</template>
+					</div>
+				</div>
+			</div>
+			<!--顶部搜索框-->
+			<header class="head">
+				<form action="">
+					<img src="img/shop02.png" onclick="gosearch()" />
+					<input id="searchText" type="text" placeholder="搜一下，发现精彩" />
+				</form>
+				<!--<img src="img/user_43.gif" />-->
+				<img src="img/shop01.png" onclick="opennew('information')" />
+			</header>
+			<div class="main">
+				<div class="top-nav">
+					<div class="mui-slider">
+						<div class="mui-slider-group" id="type_text">
+							<template>
+								<div class="mui-slider-item"  @click="goToList(site.id)" v-for="site in sites">
+									{{site.class_name}}
+								</div>
+							</template>
+						</div>
+					</div>
+					<img src="img/course_03.png" id="more" />
+				</div>
+				<!--主体轮播图-->
+				<div class="mui-slider"  style="margin-top: 0.8rem;" id="myslide">
+					<div class="mui-slider-group" id="slide">
+						<div class="mui-slider-item" v-for="site in sites">
+							<a href="#"><img v-bind:src="site.url" /></a>
+						</div>
+					</div>
+				</div>
+				<div class="top-nav02">
+					<div class="nav-tab active">
+						特价商品
+					</div>
+					<div class="nav-tab">
+						积分商品
+					</div>
+				</div>
+				<div class="swiper-container">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide">
+							<div class="index-title" style="color: #666666;">
+								<span style="justify-content: flex-start;">
+									<img src="img/shop04_03.png" style="margin-right: .1rem;"/>
+									特价商品
+								</span>
+								<span onclick="goToHotList()">
+									更多
+									<img src="img/indexarr.png"/>
+								</span>
+							</div>
+							<div class="index-main" id="tejia">
+								<div class="index-tab" v-for="site in sites" @click="setId(site.id)" v-bind:data-id="site.id">
+									<template>
+									<img v-bind:src="site.cover" />
+									<div class="title">
+										{{site.name}}
+									</div>
+									<div class="money">
+										<span>
+											¥{{site.price}}
+										</span> 可用券{{site.card_volume_limit}}
+									</div>
+									</template>
+								</div>
+							</div>
+							<!--分销商品-->
+							<div class="index-title">
+								<span style="justify-content:flex-start;color: #666666;">
+						<img src="img/shop03_03.png" style="margin-right: .1rem;"/>积分商品
+					</span>
+					<span onclick="goTojifenList()">
+									更多
+									<img src="img/indexarr.png"/>
+								</span>
+							</div>
+							<div class="mui-slider bottom-slide">
+								<div class="mui-slider-group" id="jingpin">
+									<div class="mui-slider-item index-tab02" @click="setId(site.id)" v-for="site in sites">
+										<img v-bind:src="site.cover" />
+										<div class="price">
+											积分:{{site.price}}
+										</div>
+										<div class="oldprice">
+											原积分:{{site.market_price}}
+										</div>
+									</div>
+								</div>
+							</div>
+							<!--人气推荐-->
+							<div class="index-title">
+								<span></span>
+								<img src="img/shop03_07.png" />
+								<span>
+					</span>
+							</div>
+							<div class="index-main heat" id="renqi">
+								<div class="index-tab" @click="setId(site.id)" v-for="site in sites">
+									<img v-bind:src="site.cover" />
+									<div class="title">
+										{{site.name}}
+									</div>
+									<div class="money">
+										<span>
+											积分:{{site.price}}
+										</span> <!--可用券{{site.card_volume_limit}}-->
+									</div>
+									<div class="sales">
+										销量:{{site.sales}}
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="swiper-slide">
+							<div class="index-title" style="color: #666666;">
+								<span style="justify-content: flex-start;">
+									<img src="img/shop04_03.png" style="margin-right: .1rem;"/>
+									积分商品
+								</span>
+								<span onclick="goTojifenList()">
+									更多
+									<img src="img/indexarr.png"/>
+								</span>
+							</div>
+							<div class="index-main" id="jifen_show">
+									<div class="index-tab" @click="setId(site.id)" v-for="site in sites">
+										<img v-bind:src="site.cover" />
+										<div class="title">
+											{{site.name}}
+										</div>
+										<div class="money">
+											<span>
+												积分:{{site.price}}
+											</span> <!--+券{{site.card_volume_limit}}-->
+										</div>
+										<div class="sales">
+											销量:{{site.sales}}
+										</div>
+									</div>								
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--底部导航栏-->
+			<bottom class='bottom'>
+				<div class="bottom-tab" data-target='index'>
+					<img src="img/index01.png" />
+					<span>
+						首页
+					</span>
+				</div>
+				<div class="bottom-tab" data-target='course'>
+					<img src="img/bottom02.png" />
+					<span>
+						课程
+					</span>
+				</div>
+				<div class="bottom-tab active" data-target='shop'>
+					<img src="img/bottom03-active.png" />
+					<span>
+						商城
+					</span>
+				</div>
+				<div class="bottom-tab" data-target='shopcart'>
+					<img src="img/index04.png" />
+					<span>
+						购物车
+					</span>
+				</div>
+				<div class="bottom-tab" data-target='user'>
+					<img src="img/my.png" />
+					<span>
+						我的
+					</span>
+				</div>
+			</bottom>
+		</div>
+	</body>
+	<script type="text/javascript">
+	function goTojifenList(){
+		opennew2('jifenlistall');
+	}
+	function goToList(id){
+	    		localStorage.GoodsType=id;
+			   	opennew2('goodslist');
+	}
+	function goToHotList(){
+		opennew2('hotlist');
+	}
+	    function gosearch(){	
+	    	localStorage.searchGoodsText=$('#searchText').val();
+	    	opennew2('searchgoodlist');
+	    }
+	    function setId(id){
+			   	localStorage.GoodsId=id;
+			   	opennew2('goodsdetail');
+		}
+	    function opennew2(target) {
+				mui.openWindow({
+					url: '' + target + '.html',
+					id: '' + target + ''
+				})
+		}
+		$(function() {
+			var gallery = mui('#myslide');
+			gallery.slider({
+				interval: 3000 //自动轮播周期，若为0则不自动播放，默认为0；
+			});
+
+			function plusReady() {
+				// 弹出系统等待对话框
+				var w = plus.nativeUI.showWaiting("数据加载中...");
+			}
+			if(window.plus) {
+				plusReady();
+			} else {
+				document.addEventListener("plusready", plusReady, false);
+			}
+			setTimeout(function() {
+				plus.nativeUI.closeWaiting()
+			}, 1000)
+			mySwiper = new Swiper('.swiper-container', {
+				nested: true,
+				on: {
+					slideChangeTransitionEnd: function() {
+						$('.top-nav02 .nav-tab').removeClass('active')
+						$('.top-nav02 .nav-tab').eq(this.activeIndex).addClass('active')
+					}
+				},
+			})
+			$('.top-nav02 .nav-tab').click(function() {
+				$('.top-nav02 .nav-tab').removeClass('active')
+				$(this).addClass('active')
+				mySwiper.slideTo($('.nav-tab').index(this), 1000, false);
+			})
+			$('.bottom-tab').click(function() {
+				opennew($(this).attr('data-target'))
+			})
+
+			function opennew(target) {
+				mui.openWindow({
+					url: '' + target + '.html',
+					id: '' + target + ''
+				})
+			}
+			$('#more').click(function() {
+				$('.alert').css('top', '0')
+			})
+			$('.alert').click(function() {
+				$('.alert').css('top', '-100%')
+			})
+			$('.video img').click(function() {
+				$(this).prev().click()
+			})
+			$('video').click(function() {
+				$('.myvideo video').attr('src', $(this).attr('src'))
+				$('.myvideo').show()
+			})
+			$('.myvideo').click(function() {
+				$('.myvideo').hide()
+				$('.myvideo video').attr('src', '')
+			})
+			$('.alert-group').click(function() {
+				opennew('goodslist')
+			})
+			getData();
+			function getData(){
+				/*获取商品类型*/
+				$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"Goods.getGoodsType"
+							},
+							async:true,				
+							success: function(data){
+			                    new Vue({
+								  el: '#alert',
+								  data: {
+								    sites:data.data
+								  }
+								});
+								new Vue({
+								  el: '#type_text',
+								  data: {
+								    sites:data.data
+								  }
+								});
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				            }
+				     });
+				/*获取幻灯片*/
+				$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"Advertising.showListByAid",
+								"aId":3
+							},
+							async:true,				
+							success: function(data){
+			                    new Vue({
+								  el: '#slide',
+								  data: {
+								    sites:data.data
+								  },
+								  mounted: function() {
+					                var gallery = mui('#myslide');
+					                gallery.slider({
+					                    interval: 3000
+					                });
+					            },
+								});
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				            }
+				     });
+					/*特卖商品*/
+				$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"Goods.indexSale",
+								"number":6
+							},
+							async:true,				
+							success: function(data){
+			                    new Vue({
+								  el: '#tejia',
+								  data: {
+								    sites:data.data
+								  }
+								});
+								closeWaiting();
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				            }
+				     });
+				/*精品商品*/ 
+				$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"Goods.getByNumberIntegral",
+								"number":6
+							},
+							async:true,				
+							success: function(data){
+			                    new Vue({
+								  el: '#jingpin',
+								  data: {
+								    sites:data.data
+								  }
+								});
+								new Vue({
+								  el: '#renqi',
+								  data: {
+								    sites:data.data
+								  }
+								});
+								closeWaiting();
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				            }
+				     });
+			        /*积分商品*/ 
+				$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"Goods.getByNumberIntegral",
+								"number":12
+							},
+							async:true,				
+							success: function(data){
+			                    new Vue({
+								  el: '#jifen_show',
+								  data: {
+								    sites:data.data
+								  }
+								});
+								closeWaiting();
+		                    },
+				            error: function(error) {
+				                console.log(error);
+				            }
+				     });     	     
+			}
+		})
+	</script>
+
+</html>

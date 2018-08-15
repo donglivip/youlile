@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/main.css"/>
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<style type="text/css">
+		body,html{background: rgb(244,248,248);}
+	</style>
+	<body>
+		<div class="wrapper mycourse">
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					我的课程表
+				</div>
+				<span>
+					<select id="selectschool" style="margin-top: 10px;">
+						
+					</select>
+				</span>
+			</header>
+			<div class="main">
+				<div class="course-colum">
+					<div class="course-row"></div>
+					<div class="course-row">1</div>
+					<div class="course-row">2</div>
+					<div class="course-row">3</div>
+					<div class="course-row">4</div>
+					<div class="course-row">5</div>
+					<div class="course-row">6</div>
+					<div class="course-row">7</div>
+					<div class="course-row">8</div>
+					<div class="course-row">9</div>
+				</div>
+				<div class="course-group">
+					<div class="course-row">周一</div>
+					<div class="course-row course-main" data-row="1" data-column="1"></div>
+					<div class="course-row course-main" data-row="2" data-column="1"></div>
+					<div class="course-row course-main" data-row="3" data-column="1"></div>
+					<div class="course-row course-main" data-row="4" data-column="1"></div>
+					<div class="course-row course-main" data-row="5" data-column="1"></div>
+					<div class="course-row course-main" data-row="6" data-column="1"></div>
+					<div class="course-row course-main" data-row="7" data-column="1"></div>
+					<div class="course-row course-main" data-row="8" data-column="1"></div>
+					<div class="course-row course-main" data-row="9" data-column="1"></div>
+				</div>
+				<div class="course-group">
+					<div class="course-row">周二</div>
+					<div class="course-row course-main" data-row="1" data-column="2"></div>
+					<div class="course-row course-main" data-row="2" data-column="2"></div>
+					<div class="course-row course-main" data-row="3" data-column="2"></div>
+					<div class="course-row course-main" data-row="4" data-column="2"></div>
+					<div class="course-row course-main" data-row="5" data-column="2"></div>
+					<div class="course-row course-main" data-row="6" data-column="2"></div>
+					<div class="course-row course-main" data-row="7" data-column="2"></div>
+					<div class="course-row course-main" data-row="8" data-column="2"></div>
+					<div class="course-row course-main" data-row="9" data-column="2"></div>
+				</div>
+				<div class="course-group">
+					<div class="course-row">周三</div>
+					<div class="course-row course-main" data-row="1" data-column="3"></div>
+					<div class="course-row course-main" data-row="2" data-column="3"></div>
+					<div class="course-row course-main" data-row="3" data-column="3"></div>
+					<div class="course-row course-main" data-row="4" data-column="3"></div>
+					<div class="course-row course-main" data-row="5" data-column="3"></div>
+					<div class="course-row course-main" data-row="6" data-column="3"></div>
+					<div class="course-row course-main" data-row="7" data-column="3"></div>
+					<div class="course-row course-main" data-row="8" data-column="3"></div>
+					<div class="course-row course-main" data-row="9" data-column="3"></div>
+				</div>
+				<div class="course-group">
+					<div class="course-row">周四</div>
+					<div class="course-row course-main" data-row="1" data-column="4"></div>
+					<div class="course-row course-main" data-row="2" data-column="4"></div>
+					<div class="course-row course-main" data-row="3" data-column="4"></div>
+					<div class="course-row course-main" data-row="4" data-column="4"></div>
+					<div class="course-row course-main" data-row="5" data-column="4"></div>
+					<div class="course-row course-main" data-row="6" data-column="4"></div>
+					<div class="course-row course-main" data-row="7" data-column="4"></div>
+					<div class="course-row course-main" data-row="8" data-column="4"></div>
+					<div class="course-row course-main" data-row="9" data-column="4"></div>
+				</div>
+				<div class="course-group">
+					<div class="course-row">周五</div>
+					<div class="course-row course-main" data-row="1" data-column="5"></div>
+					<div class="course-row course-main" data-row="2" data-column="5"></div>
+					<div class="course-row course-main" data-row="3" data-column="5"></div>
+					<div class="course-row course-main" data-row="4" data-column="5"></div>
+					<div class="course-row course-main" data-row="5" data-column="5"></div>
+					<div class="course-row course-main" data-row="6" data-column="5"></div>
+					<div class="course-row course-main" data-row="7" data-column="5"></div>
+					<div class="course-row course-main" data-row="8" data-column="5"></div>
+					<div class="course-row course-main" data-row="9" data-column="5"></div>
+				</div>
+				<div class="course-group">
+					<div class="course-row">周六</div>
+					<div class="course-row course-main" data-row="1" data-column="6"></div>
+					<div class="course-row course-main" data-row="2" data-column="6"></div>
+					<div class="course-row course-main" data-row="3" data-column="6"></div>
+					<div class="course-row course-main" data-row="4" data-column="6"></div>
+					<div class="course-row course-main" data-row="5" data-column="6"></div>
+					<div class="course-row course-main" data-row="6" data-column="6"></div>
+					<div class="course-row course-main" data-row="7" data-column="6"></div>
+					<div class="course-row course-main" data-row="8" data-column="6"></div>
+					<div class="course-row course-main" data-row="9" data-column="6"></div>
+				</div>
+			</div>
+		</div>
+		<script>
+			$.ajax({
+						type:"get",
+						url:window.Config.ApiServer+"/shops/",
+						data:{
+							"service":"CourseOrder.getOrderToSchool",
+							"signature":localStorage.getItem('token')
+						},
+						async:true,				
+						success: function(data){
+							console.log(JSON.stringify(data));
+							for(i=0;i<data.data.length;i++){
+								var row='<option value='+data.data[i].school_id+'>'+data.data[i].sch_name+'</option>';
+								$('#selectschool').append(row);
+							}
+							getClass($('#selectschool').val());
+	                    },
+			            error: function(error) {
+			                console.log(JSON.stringify(error));
+			            }
+					});
+			$('#selectschool').change(function(){
+				getClass($('#selectschool').val());
+			});
+			function getClass(schoolid){
+				$('.course-main').html('');
+				$('.course-main').css('background','none');
+				$.ajax({
+						type:"get",
+						url:window.Config.ApiServer+"/shops/",
+						data:{
+							"service":"GetCourse.getList",
+							"schoolId":schoolid
+						},
+						async:true,				
+						success: function(data){
+							console.log(JSON.stringify(data));	
+							for(i=0;i<data.data.length;i++){
+								var row= data.data[i].week;
+								var column= data.data[i].section;
+								$('div[data-row='+row+']'+'[data-column='+column+']').html(data.data[i].title);
+								$('div[data-row='+row+']'+'[data-column='+column+']').css('background',data.data[i].color);
+							}
+	                    },
+			            error: function(error) {
+			                console.log(JSON.stringify(error));
+			            }
+					});
+			}
+		</script>
+	</body>
+</html>

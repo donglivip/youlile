@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body>
+		<div class="wrapper login">
+			<!--顶部搜索框-->
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					找回密码
+				</div>
+				<span onclick="opennew('givepassnew')">
+					下一步
+				</span>
+			</header>
+			<div class="main">
+				<h1>
+					系统将向您填入的手机号发送短信验证码
+				</h1>
+				<div class="input-group group02">
+					<img src="img/login_07.png" />
+					<input type="number" id="phoneNumber" placeholder="请输入手机号" />
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			function opennew(target) {
+				$.ajax({
+							type:"post",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":"Users.getPassVerification",
+								"phoneNumber":$('#phoneNumber').val()
+							},
+							async:false,				
+							success: function(data){
+								if(data.data.code==1){
+									localStorage.registerToken=data.data.token;
+									localStorage.phoneNumber=$('#phoneNumber').val();
+									console.log(JSON.stringify(data));
+									mui.openWindow({
+										url: '' + target + '.html',
+										id: '' + target + ''
+									})
+								}
+								else{
+									mui.toast(data.data.info);
+								}
+		                    },
+				            error: function(error) {
+				                console.log(JSON.stringify(error));
+				            }
+				   });	
+			}
+		</script>
+	</body>
+
+</html>

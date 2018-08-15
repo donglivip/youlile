@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.4&key=3adc59b361b877d943cda0ce50b9b4da"></script>
+		<script src="http://webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/vue.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.tmpl.js"></script>
+	</head>
+	<body >
+		<div class="wrapper course results">
+			<header class="head">
+				<span class="header-back mui-action-back">
+					<img src="img/detail_03.png"/>
+				</span>
+				<div>
+					<span id="select">
+						查询所有特价商品
+					</span>
+				</div>
+			</header>
+			<div class="main shoplist goodlist" id="main">
+				<img src="img/list_06.png" class="main-img"/>
+				<div class="course-main">
+					<div class="course-box" id="goodList">
+						
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="temp" style="display: none;">
+			<div class="course-group" onclick="movetogoods(${id})">
+				<div style="width: 97px;height: 97px;float: left;"><img  class="school-img" src="${cover}" /></div>
+				<div class="course-text">
+					<h1>
+							${name}
+						</h1>
+					<div class="school-price">
+						<span>
+							¥ <strong>${price}</strong><span class="yellow">增:${add_integral}积分</span>
+						</span>
+						<span>
+							可用券<strong>${card_volume_limit}</strong>
+						</span> 
+					</div>
+					<div class="school-num">
+						<span class="money-old"></span>
+						<span>
+								销量：${sales}
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>	
+		<script type="text/javascript">
+		    function movetogoods(id){
+		    	localStorage.GoodsId=id;
+		    	opennew2('goodsdetail');
+		    }
+		    function opennew2(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+		    }
+			$(function() {
+				function plusReady() {
+				// 弹出系统等待对话框
+					/*var w = plus.nativeUI.showWaiting("数据加载中...");*/
+					/*sendList();*/		
+				
+			   }
+				function closeWaiting(){
+				  plus.nativeUI.closeWaiting();
+			    }
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
+				function opennew(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+				}
+				//				全部商品
+				$('#all').click(function() {
+					$('.upshow').hide()
+					$('.bottomshow').hide()
+					$('.nav-tab').removeClass('active')
+					$(this).addClass('active')
+					$('.default').show()
+					$('#all .botom').show()
+				})
+				//				按价格排序
+				$('#price').click(function() {
+					tab(0)
+				})
+				//				按销量排序
+				$('#num').click(function() {
+					tab(1)
+				})
+				$('.alert-group').click(function(){
+					$('.alert-group').removeClass('activenav')
+					$(this).addClass('activenav')
+					$('.head div span').html($(this).children('span').html())
+				})
+				$('.shoplist-alert').click(function(){
+					$(this).css('top','-100%')
+				})
+				$('.course-group').click(function(){
+					opennew('goodsdetail')
+				})
+				$('.head div').click(function(){
+					$('.shoplist-alert').css('top',0)
+				})
+				$('.wrapper').scroll(function(){
+					if($(this).scrollTop()>=($('.main-img').height()+$('.head').height())){
+						$('.shoplist-nav').css('position','fixed')
+					}else{
+						$('.shoplist-nav').css('position','inherit')
+					}
+				})
+				$('.search').click(function(){
+					opennew('search')
+				})
+				function tab(index) {
+					$('.default').show()
+					$('#all .botom').hide()
+					if(index == 0) {
+						$('.upshow').eq(1).hide()
+						$('.bottomshow').eq(1).hide()
+					} else {
+						$('.upshow').eq(0).hide()
+						$('.bottomshow').eq(0).hide()
+					}
+					$('.nav-tab').removeClass('active')
+					$(this).addClass('active')
+					$('.default').eq(index).hide()
+					if($('.upshow').eq(index).css('display') == 'none') {
+						if(index==0){
+						     sendList(window.typeId,'p_asc');
+						}
+						else{
+							sendList(window.typeId,'s_asc');
+						}
+						$('.upshow').eq(index).show()
+						$('.bottomshow').eq(index).hide()
+					} else {
+						if(index==0){
+						   sendList(window.typeId,'p_desc');
+						}
+						else{
+							sendList(window.typeId,'s_desc');
+						}
+						$('.bottomshow').eq(index).show()
+						$('.upshow').eq(index).hide()
+					}
+				}
+			})
+		</script>
+		<script>
+		    /*上拉加载*/
+			var page = 1, //分页码
+			    off_on = false, //分页开关(滚动加载方法 1 中用的)
+			    timers = null; //定时器(滚动加载方法 2 中用的)
+			    limit=10;
+			//加载数据
+			var LoadingDataFn = function(page,limit) {
+				var arry=sendList(page,limit);
+			    $("#temp").tmpl(arry).appendTo("#goodList");
+			    off_on = true; //[重要]这是使用了 {滚动加载方法1}  时 用到的 ！！！[如果用  滚动加载方法1 时：off_on 在这里不设 true的话， 下次就没法加载了哦！]
+			};
+			
+			//初始化， 第一次加载
+			$(document).ready(function() {
+			    LoadingDataFn(1,limit);
+			});
+			
+			
+			//滚动加载方法2
+			$('#main').scroll(function() {
+			    //当时滚动条离底部60px时开始加载下一页的内容
+			    if (($(this)[0].scrollTop + $(this).height() + 160) >= $(this)[0].scrollHeight) {
+			        clearTimeout(timers);
+			        //这里还可以用 [ 延时执行 ] 来控制是否加载 （这样就解决了 当上页的条件满足时，一下子加载多次的问题啦）
+			        timers = setTimeout(function() {
+			            page++;
+			            console.log("第" + page + "页");
+			            LoadingDataFn(page,limit); //调用执行上面的加载方法
+			        }, 300);
+			    }
+			});
+			function sendList(page,limit){
+				    dataarr=new Array();
+					$.ajax({
+									type:"get",
+									url:window.Config.ApiServer+"/shops/",
+									data:{
+										"service":"Goods.getByAllSaleList",
+										"page":  page,
+										"limit":limit
+									},
+									async:false,				
+									success: function(data){
+										dataarr=data.data.data;
+				                    },
+						            error: function(error) {
+						                console.log(JSON.stringify(error));
+						            }
+						  });
+					return dataarr;	  
+				}
+			</script>		
+	</body>
+
+</html>
+
+

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="css/mui.min.css" />
+		<link rel="stylesheet" type="text/css" href="css/main.css" />
+		<script src="js/config.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/rem.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/mui.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+	<body>
+		<div class="wrapper user">
+			<!--提示框-->
+			<div class="myalert">
+				<div class="alert-main">
+					<div class="text">
+						您还未登录，立即登录？
+					</div>
+					<div class="setting">
+						<div id="no">
+							取消
+						</div>
+						<div id="yes">
+							确定
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--客服弹出框-->
+			<div class="myalert phonealert">
+				<div class="alert-main">
+					<div class="pa-group">
+						客服帮助
+					</div>
+					<div class="pa-group">
+						<a href="tel:17502560636">
+							<span class="text">
+								<img src="img/phone.png"/>
+								热线客服
+							</span>
+							<span>
+								17502560636
+							</span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="user-top">
+				<!--信息按钮-->
+				<div class="new">
+					<img src="img/new.png" onclick=""/>
+				</div>
+				<div class="top-main">
+					<!--我的头像-->
+					<img src="img/avatar_03.gif" id="logo" />
+					<span id="denglu" class="logo" onclick="opennew('login')" style="display: none;">
+						登录/注册
+					</span>
+					<span id="ziliao" class="user-name">
+						<span id="phone">
+							
+						</span>
+							编辑资料
+							<img src="img/arright.png"/>
+					</span>
+				</div>
+			</div>
+			<div class="user-main">
+				<div class="user-inner">
+					<div class="user-group" style="border-bottom: 1px solid ghostwhite;">
+						<div class="user-tab history">
+							<img src="img/user_03.gif"  data-type='money'/>
+							<span>
+								待付款
+							</span>
+						</div>
+						<div class="user-tab history" data-type='complete'>
+							<img src="img/user_05.gif" />
+							<span>
+								待收货
+							</span>
+						</div>
+						<div class="user-tab history" data-type='ok'>
+							<img src="img/user_07.gif" />
+							<span>
+								已完成
+							</span>
+						</div>
+						<div class="user-tab history" data-type='all'>
+							<img src="img/user_09.gif" />
+							<span>
+								全部
+							</span>
+						</div>
+					</div>
+					<div class="user-group">
+						<div class="user-tab" onclick="opennew('mycourse')">
+							<img src="img/user_16.gif" />
+							<span>
+								我的课程表
+							</span>
+						</div>
+						<div class="user-tab" onclick="opennew('my-points')">
+							<img src="img/user_19.gif" />
+							<span>
+								我的积分
+							</span>
+						</div>
+						<div class="user-tab" onclick="opennew('cart')">
+							<img src="img/user_22.gif" />
+							<span>
+								我的券包
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="user-bottom">
+				<div class="bottom-group" onclick="opennew('my-cart')">
+					<span>
+						<img src="img/user_35.gif"/>
+						我的课卡
+					</span>
+					<img src="img/user_31.gif" />
+				</div>
+				<div class="bottom-group" onclick="opennew('my-points')">
+					<span>
+						<img src="img/user_37.gif"/>
+						我的积分
+					</span>
+					<img src="img/user_31.gif" />
+				</div>
+				<div class="bottom-group" onclick="opennew('my-collect')">
+					<span>
+						<img src="img/user_41.gif"/>
+						我的收藏
+					</span>
+					<img src="img/user_31.gif" />
+				</div>
+				<div class="bottom-group" id="service">
+					<span>
+						<img src="img/user_43.gif"/>
+						客服
+					</span>
+					<div>
+						9:00 - 12:00 13:00 - 18:00
+
+					</div>
+					<img src="img/user_31.gif" />
+				</div>
+				<div class="bottom-group" onclick="opennew('question')">
+					<span>
+						<img src="img/user02_03.gif"/>
+						帮助
+					</span>
+					<img src="img/user_31.gif" />
+				</div>
+				<div class="bottom-group" style="border: 0;" onclick="opennew('advice')">
+					<span>
+						<img src="img/user02_06.gif"/>
+						建议反馈
+					</span>
+					<img src="img/user_31.gif" />
+				</div>
+			</div>
+			<div class="user-bottom" style="margin-top: .1rem;" onclick="opennew('setting')">
+				<div class="bottom-group" style="border: 0;">
+					<span>
+						<img src="img/user02_08.gif"/>
+						设置
+					</span>
+					<img src="img/user_31.gif" />
+				</div>
+			</div>
+			<!--底部导航栏-->
+			<bottom class='bottom'>
+				<div class="bottom-tab" data-target='index'>
+					<img src="img/index01.png" />
+					<span>
+						首页
+					</span>
+				</div>
+				<div class="bottom-tab" data-target='course'>
+					<img src="img/bottom02.png" />
+					<span>
+						课程
+					</span>
+				</div>
+				<div class="bottom-tab" data-target='shop'>
+					<img src="img/index03.png" />
+					<span>
+						商城
+					</span>
+				</div>
+				<div class="bottom-tab"  data-target='shopcart'>
+					<img src="img/index04.png" />
+					<span>
+						购物车
+					</span>
+				</div>
+				<div class="bottom-tab active" data-target='user'>
+					<img src="img/bottom05-active.png" />
+					<span>
+						我的
+					</span>
+				</div>
+			</bottom>
+		</div>
+		<script type="text/javascript">
+			function opennew(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+				}
+			$(function() {
+				// 弹出系统等待对话框
+				function plusReady() {
+					var w = plus.nativeUI.showWaiting("数据加载中...");
+				}
+				if(window.plus) {
+					plusReady();
+				} else {
+					document.addEventListener("plusready", plusReady, false);
+				}
+				//			ajax完成后关闭提示框
+				setTimeout(function() {
+					plus.nativeUI.closeWaiting()
+				}, 1000)
+				$('.bottom-tab').click(function() {
+					opennew($(this).attr('data-target'))
+				})
+				$('#service').click(function() {
+					$('.phonealert').css('display', 'flex')
+				})
+				$('.myalert').click(function() {
+					$('.myalert').css('display', 'none')
+				})
+				$('.history').click(function(){
+					opennew('orderhistory')
+				})
+				$('.user-name').click(function(){
+					opennew('userinform')
+				})
+				getData();
+				function getData(){
+					$.ajax({
+							type:"get",
+							url:window.Config.ApiServer+"/shops/",
+							data:{
+								"service":  "Users.getInfor",
+								"signature":localStorage.getItem('token')
+							},
+							async:false,				
+							success: function(data){
+								if(data.ret==1066){
+									$('#denglu').css("display","block");
+									$('#ziliao').css("display","none");
+								}
+								else{
+									 console.log(JSON.stringify(data.data));
+									 if(data.data.head_portrait != null){
+										$('#logo').attr('src',data.data.head_portrait);
+                                        }
+										$('#denglu').css("display","none");
+										$('#ziliao').css("display","");
+									    $('#phone').html(data.data.account);
+								}
+		                    },
+				            error: function(error) {
+				            	console.log(JSON.stringify(data));
+				                console.log(error);
+				            }
+				    });  
+				}
+				function opennew(target) {
+					mui.openWindow({
+						url: '' + target + '.html',
+						id: '' + target + ''
+					})
+				}
+			})
+		</script>
+	</body>
+
+</html>
