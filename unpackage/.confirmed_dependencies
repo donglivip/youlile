@@ -1,1 +1,31 @@
-null
+{
+  "index.html": {
+    "href": "index.html",
+    "resources": [
+      "manifest.json",
+      "js/mui.min.js",
+      "css/mui.min.css",
+      "css/main.css",
+      "js/config.js",
+      "js/rem.js",
+      "js/jquery.min.js",
+      "js/vue.min.js",
+      "img/new.png",
+      "img/search.png",
+      "img/indextitle.gif",
+      "img/index02_03.gif",
+      "img/index-active.png",
+      "img/bottom02.png",
+      "img/index03.png",
+      "img/index04.png",
+      "img/my.png",
+      "img/sao.png",
+      "img/index02.png",
+      "img/jifen.png",
+      "img/qianbao.png",
+      "img/indexarr.png"
+    ],
+    "refer": [],
+    "priority": 0
+  }
+}
