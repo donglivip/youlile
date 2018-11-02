@@ -213,6 +213,7 @@
 							},
 							async:false,				
 							success: function(data){
+								console.log(JSON.stringify(data));
 			                    if(data.data.version_number!=nownumber){
 			                    	closeWaiting();
 			                    	alert('版本更新');
