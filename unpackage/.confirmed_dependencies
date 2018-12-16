@@ -25,7 +25,24 @@
       "img/qianbao.png",
       "img/indexarr.png"
     ],
-    "refer": [],
+    "refer": [
+      "shop.html",
+      "course.html"
+    ],
     "priority": 0
+  },
+  "shop.html": {
+    "refer": [
+      "goodslist.html",
+      "shopcart.html",
+      "index.html"
+    ],
+    "resources": []
+  },
+  "shopcart.html": {
+    "refer": [
+      "user.html"
+    ],
+    "resources": []
   }
 }

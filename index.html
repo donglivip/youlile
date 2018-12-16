@@ -75,10 +75,10 @@
 				<!--主体轮播图-->
 				<div class="mui-slider" id="slide_box">
 					<div class="mui-slider-group" id="slide">
-						
-							<div class="mui-slider-item" v-for="site in sites">
-								<a href="#"><img v-bind:src="site.url"/></a>
-							</div>
+
+						<div class="mui-slider-item" v-for="site in sites">
+							<a href="#"><img v-bind:src="site.url" /></a>
+						</div>
 						</template>
 						<!--<div class="mui-slider-item video">
 								<video poster="img/back.jpg" src="img/UC-download.mp4"></video>
@@ -94,7 +94,7 @@
 						<img src="img/indexarr.png"/>
 					</span>
 				</div>
-				<div class="index-main" id="tejia" >
+				<div class="index-main" id="tejia">
 					<template>
 						<div class="index-tab" v-for="site in sites" @click="setId(site.id)" v-bind:data-id="site.id">
 							<img v-bind:src="site.cover" />
@@ -107,7 +107,7 @@
 								</span> 可用券{{site.card_volume_limit}}
 							</div>
 						</div>
-					</template>	
+					</template>
 				</div>
 				<!--分销商品-->
 				<div class="index-title">
@@ -121,15 +121,15 @@
 				<div class="mui-slider bottom-slide">
 					<div class="mui-slider-group" id="jingpin">
 						<template>
-						<div class="mui-slider-item index-tab02" v-for="site in sites" @click="setId(site.id)" v-bind:data-id="site.id">
-							<img v-bind:src="site.cover"/>
-							<div class="price">
-								积分:{{site.price}}
+							<div class="mui-slider-item index-tab02" v-for="site in sites" @click="setId(site.id)" v-bind:data-id="site.id">
+								<img v-bind:src="site.cover" />
+								<div class="price">
+									积分:{{site.price}}
+								</div>
+								<div class="oldprice">
+									{{site.market_price}}
+								</div>
 							</div>
-							<div class="oldprice">
-								{{site.market_price}}
-							</div>
-						</div>
 						</template>
 					</div>
 				</div>
@@ -152,7 +152,7 @@
 					</span>
 				</div>
 				<div class="bottom-tab" data-target='shop'>
-					<img src="img/index03.png"/>
+					<img src="img/index03.png" />
 					<span>
 						商城
 					</span>
@@ -173,66 +173,70 @@
 		</div>
 	</body>
 	<script type="text/javascript">
-	    function goTojifenList(){
-		   opennew2('jifenlistall');
-	    }
-	    function goToHotList(){
-		   opennew2('hotlist');
-	    }
-	    function gosearch(){	
-	    	localStorage.searchGoodsText=$('#searchText').val();
-	    	opennew2('searchgoodlist');
-	    }
-	    function opennew2(target) {
-				mui.openWindow({
-					url: '' + target + '.html',
-					id: '' + target + ''
-				})
+		function goTojifenList() {
+			opennew2('jifenlistall');
 		}
-	    function setId(id){
-			   	localStorage.GoodsId=id;
-			   	opennew('goodsdetail');
+
+		function goToHotList() {
+			opennew2('hotlist');
+		}
+
+		function gosearch() {
+			localStorage.searchGoodsText = $('#searchText').val();
+			opennew2('searchgoodlist');
+		}
+
+		function opennew2(target) {
+			mui.openWindow({
+				url: '' + target + '.html',
+				id: '' + target + ''
+			})
+		}
+
+		function setId(id) {
+			localStorage.GoodsId = id;
+			opennew('goodsdetail');
 		}
 		$(function() {
-			
-//			var gallery = mui('.mui-slider');
-//			gallery.slider({
-//			  interval:3000//自动轮播周期，若为0则不自动播放，默认为0；
-//			});
 			function plusReady() {
-				// 弹出系统等待对话框
-				var w = plus.nativeUI.showWaiting("数据加载中...");
-				mui.getJSON("manifest.json",null,function(data){
-				   var nownumber= data.version.name;
-				   console.log(nownumber);
-				   $.ajax({
-							type:"get",
-							url:window.Config.ApiServer+"/shops/",
-							data:{
-								"service":"GetSvnNumber.getList",
-							},
-							async:false,				
-							success: function(data){
-								console.log(JSON.stringify(data));
-			                    if(data.data.version_number!=nownumber){
-			                    	closeWaiting();
-			                    	alert('版本更新');
-			                    	if(mui.os.android){
-			                    	    location.href=data.data.url1;
-			                    	}
-			                    	else{
-			                    		location.href=data.data.url2;
-			                    	}
-			                    }
-		                    },
-				            error: function(error) {
-				                console.log(error);
-				            }
-				     });
-			});
-				getData();		
-				
+				plus.runtime.getProperty(plus.runtime.appid, function(inf) {
+					$.ajax({
+						type: "post",
+						url: "http://api.yuri.u581.com/shops/?service=GetSvnNumber.getList",
+						dataType: 'json',
+						success: function(res) {
+							if(res.data.version_number != inf.version) {
+								//										版本更新
+								plus.nativeUI.showWaiting("下载更新资源包,请勿关闭页面！");
+								plus.downloader.createDownload(res.data.url1, {
+									filename: "_doc/update/"
+								}, function(d, status) {
+									if(status == 200) {
+										plus.runtime.install(d.filename, {}, function() {
+											plus.nativeUI.alert("应用资源更新完成！点击重启！", function() {
+												plus.nativeUI.closeWaiting();
+												plus.runtime.restart();
+											});
+										}, function(e) {
+											plus.nativeUI.closeWaiting();
+											plus.nativeUI.alert("安装更新包失败[" + e.code + "]：" + e.message);
+										});
+									} else {
+										plus.nativeUI.closeWaiting();
+										plus.nativeUI.alert("下载更新包失败！");
+									}
+								}).start();
+							}
+							getData();
+						},
+						error: function(err) {
+							alert(JSON.stringify(err))
+						}
+					});
+				});
+
 			}
+
 			if(window.plus) {
 				plusReady();
 			} else {
@@ -241,10 +245,11 @@
 			$('.bottom-tab').click(function() {
 				opennew($(this).attr('data-target'))
 			});
-			function closeWaiting(){
+
+			function closeWaiting() {
 				plus.nativeUI.closeWaiting();
 			}
-			$('#myclass').click(function(){
+			$('#myclass').click(function() {
 				opennew('mycourse');
 			})
 			/*获取数据*/
@@ -258,102 +263,104 @@
 			$('#myscan').click(function() {
 				opennew('scan')
 			})
-			$('.video img').click(function(){
+			$('.video img').click(function() {
 				$(this).prev().click()
 			})
-			$('video').click(function(){
-				$('.myvideo video').attr('src',$(this).attr('src'))
+			$('video').click(function() {
+				$('.myvideo video').attr('src', $(this).attr('src'))
 				$('.myvideo').show()
 			})
-			$('.myvideo').click(function(){
+			$('.myvideo').click(function() {
 				$('.myvideo').hide()
-				$('.myvideo video').attr('src','')
+				$('.myvideo video').attr('src', '')
 			})
-			function getData(){
+
+			function getData() {
 				/*幻灯片*/
 				$.ajax({
-							type:"get",
-							url:window.Config.ApiServer+"/shops/",
-							data:{
-								"service":"Advertising.showListByAid",
-								"aId":2
+					type: "get",
+					url: window.Config.ApiServer + "/shops/",
+					data: {
+						"service": "Advertising.showListByAid",
+						"aId": 2
+					},
+					async: true,
+					success: function(data) {
+						new Vue({
+							el: '#slide',
+							data: {
+								sites: data.data
 							},
-							async:true,				
-							success: function(data){
-			                    new Vue({
-								  el: '#slide',
-								  data: {
-								    sites:data.data
-								  },
-								  mounted: function() {
-					                var gallery = mui('#slide_box');
-					                gallery.slider({
-					                    interval: 3000
-					                });
-					            },
+							mounted: function() {
+								var gallery = mui('#slide_box');
+								gallery.slider({
+									interval: 3000
 								});
-								closeWaiting();
-		                    },
-				            error: function(error) {
-				                console.log(error);
-				            }
-				     });
+							},
+						});
+						closeWaiting();
+					},
+					error: function(error) {
+						console.log(error);
+					}
+				});
 				/*特卖商品*/
 				$.ajax({
-							type:"get",
-							url:window.Config.ApiServer+"/shops/",
-							data:{
-								"service":"Goods.indexSale",
-								"number":6
-							},
-							async:true,				
-							success: function(data){
-			                    new Vue({
-								  el: '#tejia',
-								  data: {
-								    sites:data.data
-								  }
-								});
-								closeWaiting();
-		                    },
-				            error: function(error) {
-				                console.log(error);
-				            }
-				     });
-				/*积分商品*/ 
+					type: "get",
+					url: window.Config.ApiServer + "/shops/",
+					data: {
+						"service": "Goods.indexSale",
+						"number": 6
+					},
+					async: true,
+					success: function(data) {
+						new Vue({
+							el: '#tejia',
+							data: {
+								sites: data.data
+							}
+						});
+						closeWaiting();
+					},
+					error: function(error) {
+						console.log(error);
+					}
+				});
+				/*积分商品*/
 				$.ajax({
-							type:"get",
-							url:window.Config.ApiServer+"/shops/",
-							data:{
-								"service":"Goods.getByNumberIntegral",
-								"number":6
-							},
-							async:true,				
-							success: function(data){
-			                    new Vue({
-								  el: '#jingpin',
-								  data: {
-								    sites:data.data
-								  }
-								});
-								closeWaiting();
-		                    },
-				            error: function(error) {
-				                console.log(error);
-				            }
-				     });
+					type: "get",
+					url: window.Config.ApiServer + "/shops/",
+					data: {
+						"service": "Goods.getByNumberIntegral",
+						"number": 6
+					},
+					async: true,
+					success: function(data) {
+						new Vue({
+							el: '#jingpin',
+							data: {
+								sites: data.data
+							}
+						});
+						closeWaiting();
+					},
+					error: function(error) {
+						console.log(error);
+					}
+				});
 			}
 		})
 		/*获取数据*/
-			function opennew(target) {
-				var wobj = plus.webview.getWebviewById(target);
-                 if(wobj!=null){
-                    wobj.reload(true);
-                 }
-				mui.openWindow({
-					url: '' + target + '.html',
-					id: '' + target + ''
-				})
+		function opennew(target) {
+			var wobj = plus.webview.getWebviewById(target);
+			if(wobj != null) {
+				wobj.reload(true);
 			}
-</script>
+			mui.openWindow({
+				url: '' + target + '.html',
+				id: '' + target + ''
+			})
+		}
+	</script>
+
 </html>

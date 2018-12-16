@@ -5,9 +5,9 @@
 		"iPad"
 	],
 	"id": "H5FCCC706",/*应用的标识，创建应用时自动生成，勿手动修改*/
-	"name": "youlile",/*应用名称，程序桌面图标名称*/
+	"name": "优利乐",/*应用名称，程序桌面图标名称*/
 	"version": {
-		"name": "0.0.1",/*应用版本名称*/
+		"name": "1.0.1",/*应用版本名称*/
 		"code": ""
 	},
 	"description": "",/*应用描述信息*/
@@ -267,6 +267,26 @@
 					"img/qianbao.png",
 					"img/indexarr.png"
 				],
+				"priority": 0,
+				"refer": [
+					"shop.html",
+					"course.html"
+				]
+			},
+			"shop.html": {
+				"resources": [],
+				"refer": [
+					"goodslist.html",
+					"shopcart.html",
+					"index.html"
+				],
+				"priority": 0
+			},
+			"shopcart.html": {
+				"resources": [],
+				"refer": [
+					"user.html"
+				],
 				"priority": 0
 			}
 		},
@@ -393,8 +413,6 @@
 				"advice.html",
 				"fonts/lg.woff",
 				"js/mui.poppicker.js",
-				"shopcart.html",
-				"course.html",
 				"js/city.data.js",
 				"img/shop05_03.png",
 				"jjilulist.html",
@@ -424,16 +442,13 @@
 				"mycourse.html",
 				"img/shopnav_18.png",
 				"orderhistory.html",
-				"user.html",
 				"searchgoodlist.html",
 				"img/course02_18.png",
 				"img/main.jpg",
 				"img/course02_21.png",
 				"question.html",
-				"shop.html",
 				"pay.html",
 				"img/course02_03.png",
-				"goodslist.html",
 				"img/list_03.png",
 				"img/detail_03.png",
 				"img/bottom04.png",
